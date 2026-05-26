@@ -75,7 +75,7 @@ The project can be run directly in any modern web browser.
 
 ## 🤝 Credits
 
-- **Design**: Created by `gfxthecars` / `vibhorsxni`.
+- **Design**: Created by `i.vibhor`/`vibhorsxni`.
 - **3D Models**: 
   - Nissan Skyline R32 GT-R by [Lexyc16](https://sketchfab.com/3d-models/nissan-skyline-r32-gt-r-8810e677eca543a6b840cf67dd064aa4)
   - 1997 Nissan Skyline GT-R R33 by [DisneyCars](https://sketchfab.com/3d-models/1997-nissan-skyline-gt-r-r33-d80ea5ec62ed433483fc62f55d14e410)
