@@ -1,0 +1,109 @@
+<svg viewBox="0 0 1000 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="carGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8e8e8;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#d0d0d0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a0a0a0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="stripeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0055dd;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#0033aa;stop-opacity:0.9" />
+    </linearGradient>
+    <radialGradient id="windowGradient" cx="40%" cy="40%">
+      <stop offset="0%" style="stop-color:#4488ff;stop-opacity:0.3" />
+      <stop offset="100%" style="stop-color:#001155;stop-opacity:0.8" />
+    </radialGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="4" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  
+  <!-- Road/Background -->
+  <rect width="1000" height="800" fill="#1a1a1a"/>
+  <rect y="650" width="1000" height="150" fill="#222"/>
+  
+  <!-- Street lights glow -->
+  <circle cx="100" cy="100" r="120" fill="#ffdd00" opacity="0.1"/>
+  <circle cx="900" cy="150" r="100" fill="#ffdd00" opacity="0.08"/>
+  
+  <!-- Main GT-R R34 Body -->
+  <g filter="url(#shadow)">
+    <!-- Car body base (light gray/silver) -->
+    <path d="M 200 450 L 250 380 L 350 340 L 650 340 L 750 380 L 800 450 L 750 520 L 200 520 Z" 
+          fill="url(#carGradient)" stroke="#333" stroke-width="2"/>
+    
+    <!-- Blue stripe 1 (center hood) -->
+    <path d="M 350 360 L 380 350 L 620 350 L 650 360 L 630 390 L 370 390 Z" 
+          fill="url(#stripeGradient)" opacity="0.95"/>
+    
+    <!-- Blue stripe 2 (roof) -->
+    <ellipse cx="500" cy="390" rx="140" ry="50" fill="url(#stripeGradient)" opacity="0.9"/>
+    
+    <!-- Blue stripe 3 (back) -->
+    <path d="M 650 460 L 680 450 L 750 470 L 720 490 Z" 
+          fill="url(#stripeGradient)" opacity="0.85"/>
+    
+    <!-- Windows -->
+    <ellipse cx="380" cy="400" rx="50" ry="35" fill="url(#windowGradient)" stroke="#0055dd" stroke-width="1"/>
+    <ellipse cx="620" cy="400" rx="50" ry="35" fill="url(#windowGradient)" stroke="#0055dd" stroke-width="1"/>
+    
+    <!-- Headlights (quad setup) -->
+    <circle cx="270" cy="440" r="12" fill="#ffff00" opacity="0.9"/>
+    <circle cx="295" cy="440" r="12" fill="#ffff00" opacity="0.9"/>
+    <circle cx="705" cy="440" r="12" fill="#ffff00" opacity="0.9"/>
+    <circle cx="730" cy="440" r="12" fill="#ffff00" opacity="0.9"/>
+    
+    <!-- Headlight surrounds -->
+    <circle cx="270" cy="440" r="16" fill="none" stroke="#333" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="295" cy="440" r="16" fill="none" stroke="#333" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="705" cy="440" r="16" fill="none" stroke="#333" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="730" cy="440" r="16" fill="none" stroke="#333" stroke-width="1.5" opacity="0.6"/>
+    
+    <!-- Front bumper detail -->
+    <rect x="240" y="450" width="20" height="25" fill="none" stroke="#0055dd" stroke-width="2" opacity="0.7"/>
+    <rect x="740" y="450" width="20" height="25" fill="none" stroke="#0055dd" stroke-width="2" opacity="0.7"/>
+    
+    <!-- Iconic R34 Rear Wing (spoiler) -->
+    <g opacity="0.9">
+      <rect x="745" y="380" width="12" height="100" fill="#333" stroke="#0055dd" stroke-width="2"/>
+      <rect x="740" y="360" width="22" height="15" fill="none" stroke="#0055dd" stroke-width="2"/>
+      <line x1="751" y1="360" x2="751" y2="480" stroke="#0055dd" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <!-- Wheels -->
+    <!-- Front left wheel -->
+    <circle cx="300" cy="530" r="45" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+    <circle cx="300" cy="530" r="38" fill="none" stroke="#333" stroke-width="2"/>
+    <circle cx="300" cy="530" r="30" fill="none" stroke="#0055dd" stroke-width="1.5" opacity="0.6"/>
+    <g transform="translate(300, 530)">
+      <line x1="-25" y1="0" x2="25" y2="0" stroke="#555" stroke-width="1" opacity="0.5"/>
+      <line x1="0" y1="-25" x2="0" y2="25" stroke="#555" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <!-- Front right wheel -->
+    <circle cx="700" cy="530" r="45" fill="none" stroke="#1a1a1a" stroke-width="3"/>
+    <circle cx="700" cy="530" r="38" fill="none" stroke="#333" stroke-width="2"/>
+    <circle cx="700" cy="530" r="30" fill="none" stroke="#0055dd" stroke-width="1.5" opacity="0.6"/>
+    <g transform="translate(700, 530)">
+      <line x1="-25" y1="0" x2="25" y2="0" stroke="#555" stroke-width="1" opacity="0.5"/>
+      <line x1="0" y1="-25" x2="0" y2="25" stroke="#555" stroke-width="1" opacity="0.5"/>
+    </g>
+    
+    <!-- Additional racing details -->
+    <text x="450" y="480" font-size="24" fill="#0055dd" opacity="0.7" font-family="Orbitron" font-weight="bold" text-anchor="middle">GT-R</text>
+    
+    <!-- Drift marks suggestion -->
+    <path d="M 100 600 Q 200 620 300 610" stroke="#ff0033" stroke-width="2" opacity="0.3" fill="none"/>
+    <path d="M 700 620 Q 800 600 900 620" stroke="#ff0033" stroke-width="2" opacity="0.3" fill="none"/>
+  </g>
+  
+  <!-- Racing event atmosphere -->
+  <text x="500" y="100" font-size="48" font-weight="900" fill="#ff0033" opacity="0.8" text-anchor="middle" font-family="'Barlow Condensed'">
+    STREET RACING LEGEND
+  </text>
+  
+  <!-- Neon effect text -->
+  <text x="500" y="750" font-size="20" fill="#0055dd" opacity="0.6" text-anchor="middle" font-family="'Orbitron'">
+    SKYLINE R34 • 276 HP • LEGENDARY
+  </text>
+</svg>

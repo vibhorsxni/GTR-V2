@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" role="img" aria-labelledby="title">
+  <title id="title">NISMO wordmark</title>
+  <rect width="220" height="60" rx="8" fill="#111"/>
+  <path d="M16 42V18h13l22 16V18h14v24H52L30 26v16H16Zm60 0V18h15v24H76Zm27 0V18h44v10h-29v4h25v10h-40Zm57 0V18h16l15 13 15-13h16v24h-14V31l-13 11h-8l-13-11v11h-14Z" fill="#f5f5f5"/>
+  <path d="M130 42h30V30h-30v12Z" fill="#c80815"/>
+</svg>
