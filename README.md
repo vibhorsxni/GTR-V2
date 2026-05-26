@@ -1,4 +1,4 @@
-# 🐍 Nissan GT-R Legacy Tribute | Fan-Made Scroll Experience
+# Nissan GT-R Legacy Tribute | Fan-Made Scroll Experience
 
 A premium, interactive, scroll-driven web tribute to the legendary **Nissan GT-R** lineage—from the motorsport-dominating R32 "Godzilla" to the modern R35 supercar killer.
 
