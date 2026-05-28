@@ -68,8 +68,8 @@
           <span>Introduction</span>
         </div>
         <p class="intro__lead">
-          Built from racing obsession and street-car stubbornness, the GT-R became the machine that made lap timers
-          nervous. Four generations turned one badge into a global shorthand for grip, boost, and impossible pace.
+          Built from racing obsession and street-car stubbornness, Nissan GT-R became a machine that made lap timers
+          nervous. Four generations turned to one badge into a global ICON for grip, boost, and impossible pace.
         </p>
       </div>
       <div class="split-screen__image">
@@ -110,8 +110,267 @@
             <dd>29/29 wins</dd>
           </div>
         </dl>
+        <button class="r32-drawer-trigger" id="r32-drawer-open" aria-controls="r32-drawer">
+          <span>Explore R32 History</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
     </section>
+
+    <!-- R32 Godzilla Chronicles — Slide-in Drawer -->
+    <aside class="r32-drawer" id="r32-drawer" aria-label="R32 Godzilla history and achievements" aria-hidden="true">
+      <div class="r32-drawer__backdrop" id="r32-drawer-backdrop"></div>
+      <div class="r32-drawer__panel">
+        <header class="r32-drawer__header">
+          <div>
+            <p class="eyebrow" style="margin:0 0 8px"><br><br><br><br>Skyline GT-R BNR32</p>
+            <h2 class="r32-drawer__title"> Godzilla Chronicles.</h2>
+          </div>
+          <button class="r32-drawer__close" id="r32-drawer-close" aria-label="Close R32 history panel">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="r32-drawer__content" id="r32-drawer-content">
+
+          <section class="r32-cinema r32-reveal" aria-label="R32 feature film">
+            <video
+              src="images/1000+Hp Calsonic Skyline R32 GT-R  FULL BOOST Epic ONBOARD - HillClimb Monsters (1080p, h264).mp4"
+              autoplay loop muted playsinline></video>
+            <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
+              <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <div class="r32-cinema__shade" aria-hidden="true"></div>
+            <div class="r32-cinema__copy">
+              <p class="eyebrow"></p>
+              <h3>The car that made the rulebook blink.</h3>
+              <a class="r32-cinema__cta" href="#r32-briefing">Open the briefing</a>
+            </div>
+            <div class="r32-cinema__meters" aria-label="R32 headline records">
+              <span><strong>29/29</strong>JTCC wins</span>
+              <span><strong>2x</strong>Bathurst 1000</span>
+              <span><strong>1991</strong>Spa 24 Hours</span>
+            </div>
+          </section>
+
+          <section class="r32-briefing" id="r32-briefing">
+            <div class="r32-briefing__intro r32-reveal">
+              <h3>Tap the dossier cards. Watch the story change.</h3>
+              <p>
+                The R32 was not just quick. It linked boost, all-wheel drive, four-wheel steering, and endurance
+                discipline into one machine that forced rivals to chase a moving target.
+              </p>
+            </div>
+
+            <div class="r32-briefing__grid">
+              <article class="r32-focus r32-reveal" aria-live="polite">
+                <span class="r32-focus__kicker" id="r32-focus-kicker">Race record</span>
+                <h3 id="r32-focus-title">29 starts. 29 wins.</h3>
+                <p id="r32-focus-copy">
+                  From 1990 to 1993, the R32 GT-R swept every Japanese Touring Car Championship round it entered.
+                  The run became so complete that the car's class and balance of power had to be reconsidered.
+                </p>
+                <div class="r32-focus__metric">
+                  <strong id="r32-focus-stat">100%</strong>
+                  <span id="r32-focus-label">JTCC win rate</span>
+                </div>
+              </article>
+
+              <div class="r32-dossier r32-reveal" role="tablist" aria-label="R32 story selector">
+                <button class="r32-dossier__card is-active" type="button" data-story="jtcc" role="tab"
+                  aria-selected="true">
+                  <span>01</span>
+                  <strong>Unbeatable run</strong>
+                  <small>Touring-car domination</small>
+                </button>
+                <button class="r32-dossier__card" type="button" data-story="godzilla" role="tab" aria-selected="false">
+                  <span>02</span>
+                  <strong>Godzilla name</strong>
+                  <small>Bathurst shockwave</small>
+                </button>
+                <button class="r32-dossier__card" type="button" data-story="attesa" role="tab" aria-selected="false">
+                  <span>03</span>
+                  <strong>ATTESA E-TS</strong>
+                  <small>Grip as a weapon</small>
+                </button>
+                <button class="r32-dossier__card" type="button" data-story="rb26" role="tab" aria-selected="false">
+                  <span>04</span>
+                  <strong>RB26DETT</strong>
+                  <small>Built for boost</small>
+                </button>
+                <button class="r32-dossier__card" type="button" data-story="Nismo" role="tab" aria-selected="false">
+                  <span>05</span>
+                  <strong>Nismo</strong>
+                  <small>Nismo & N1 Editions</small>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="r32-dashboard r32-reveal" aria-label="R32 technical dashboard">
+            <div class="r32-gauge">
+              <span>Touring win index</span>
+              <strong>29/29</strong>
+              <i style="--fill:100%"></i>
+            </div>
+            <div class="r32-gauge">
+              <span>Front torque split</span>
+              <strong>0-50%</strong>
+              <i style="--fill:72%"></i>
+            </div>
+            <div class="r32-gauge">
+              <span>Production run</span>
+              <strong>43,934</strong>
+              <i style="--fill:84%"></i>
+            </div>
+            <div class="r32-gauge">
+              <span>N1 homologation</span>
+              <strong>560</strong>
+              <i style="--fill:46%"></i>
+            </div>
+          </section>
+          <!-- History Timeline -->
+          <section class="r32-modern-timeline r32-reveal">
+            <h3> Timeline</h3>
+            <div class="r32-modern-timeline__rail">
+              <article><span>1989</span>
+                <p>R32 Skyline GT-R launches with RB26DETT, ATTESA E-TS, and Super HICAS.</p>
+              </article>
+              <article><span>1990</span>
+                <p>JTCC clean sweep begins. Australia gives it the Godzilla nickname.</p>
+              </article>
+              <article><span>1991</span>
+                <p>Bathurst 1000 and Spa 24 Hours wins prove the package beyond Japan.</p>
+              </article>
+              <article><span>1992</span>
+                <p>Second Bathurst 1000 win. Nismo edition launched. R32 cemented as the greatest Group A touring car.
+                </p>
+              </article>
+              <article><span>1993</span>
+                <p>The streak reaches 29 wins from 29 starts before Group A fades out.</p>
+              </article>
+              <article><span>1994</span>
+                <p>Production ends. 43,934 units built. The legend passes to the R33, but the Godzilla name lives
+                  forever</p>
+              </article>
+              <article><span>Total Built</span>
+                <p>43,934 units built <br> N1 Units - 560 <br> Nismo Units - 560 <br> V-Spec - 1,453</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="r32-close-row">
+            <button class="r32-drawer__close r32-drawer__close--bottom" type="button"
+              aria-label="Close R32 history panel">
+              Close
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="r32-cards-grid">
+            <!-- The Unbeatable Run -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:0ms">
+              <span class="r32-card__accent" aria-hidden="true">29/29</span>
+              <h3>The Unbeatable Run</h3>
+              <p>Between 1990 and 1993, the R32 GT-R entered 29 rounds of the Japanese Touring Car Championship and won
+                every single one. No other production-based car has matched the streak. The dominance was so total that
+                rival manufacturers lobbied to have the GT-R class banned.</p>
+            </div>
+
+            <!-- Godzilla Origin -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:60ms">
+              <span class="r32-card__accent" aria-hidden="true">ゴジラ</span>
+              <h3>Birth of "Godzilla"</h3>
+              <p>The nickname was born at the 1990 Bathurst 1000 in Australia. The R32 GT-R, piloted by Skaife and
+                Richards, destroyed the local V8 field so convincingly that the Australian motorsport press dubbed it
+                "Godzilla" — an unstoppable Japanese monster that couldn't be killed.</p>
+            </div>
+
+            <!-- Bathurst Victories -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:120ms">
+              <span class="r32-card__accent" aria-hidden="true">1000</span>
+              <h3>Bathurst 1000 Domination</h3>
+              <p>The R32 GT-R won the legendary Bathurst 1000 endurance race in 1991 and 1992, humbling the
+                Australian-built Ford Sierras and Holden Commodores on their home soil. The wins were so controversial
+                that the FIA Group A regulations were eventually changed to exclude the GT-R.</p>
+            </div>
+
+            <!-- Spa 24 Hours -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:180ms">
+              <span class="r32-card__accent" aria-hidden="true">SPA</span>
+              <h3>Spa 24 Hours — 1991</h3>
+              <p>Not content with dominating Asia and Australia, the R32 GT-R crossed into European endurance racing and
+                won the grueling Spa 24 Hours in 1991 — proving that the ATTESA E-TS and RB26DETT combination could
+                conquer any circuit on the planet.</p>
+            </div>
+          </div>
+
+          <!-- Divider: Bold Statement -->
+          <div class="r32-statement r32-reveal" style="--reveal-delay:0ms">
+            <p>One car.<br>Four continents.<br><strong>Zero defeats.</strong></p>
+          </div>
+
+          <div class="r32-cards-grid">
+            <!-- ATTESA E-TS -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:60ms">
+              <span class="r32-card__accent" aria-hidden="true">AWD</span>
+              <h3>ATTESA E-TS — The Secret Weapon</h3>
+              <p>The R32 was the first mass-produced Japanese sports car to ship with an electronically controlled
+                all-wheel-drive system. ATTESA E-TS could shift up to 50% of torque to the front wheels in under
+                milliseconds, giving the R32 grip that rear-drive rivals simply could not match in wet or dry
+                conditions.</p>
+            </div>
+
+            <!-- RB26DETT -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:120ms">
+              <span class="r32-card__accent" aria-hidden="true">RB26</span>
+              <h3>The Gentleman's Agreement</h3>
+              <p>Officially rated at 276 hp — the power ceiling Japanese manufacturers voluntarily agreed upon. In
+                reality, every RB26DETT rolling off the Nissan line made closer to 320 hp. Tuners quickly discovered the
+                iron-block inline-six could handle 600+ hp on stock internals, and 1,000+ hp with forged components. The
+                RB26 became the most legendary tuner engine in history.</p>
+            </div>
+
+            <!-- Nismo & Special Editions -->
+            <div class="r32-card r32-reveal" style="--reveal-delay:180ms">
+              <span class="r32-card__accent" aria-hidden="true">NISMO</span>
+              <h3>Nismo & N1 Editions</h3>
+              <p>Nissan Motorsport International produced limited-run homologation specials: the N1 variant stripped
+                weight and added a reinforced engine block for endurance racing, while the Nismo edition received
+                exclusive aero parts and suspension tuning. Only 560 N1 units were ever built.</p>
+            </div>
+          </div>
+          <!-- Closing Statement -->
+          <div class="r32-statement r32-statement--final r32-reveal" style="--reveal-delay:0ms">
+            <p>They didn't just ban<br>the car from racing.<br><strong>They rewrote<br>the rules.</strong></p>
+          </div>
+
+        </div>
+      </div>
+    </aside>
 
     <section class="generation generation--dark" id="r33">
       <div class="generation__content reveal">
@@ -139,6 +398,14 @@
             <dd>Sub-8 min</dd>
           </div>
         </dl>
+        <button class="r33-drawer-trigger" id="r33-drawer-open" aria-controls="r33-drawer">
+          <span>Explore R33 History</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
       <div class="generation__media model-card">
         <iframe title="1997 Nissan Skyline GT-R R33 by DisneyCars on Sketchfab"
@@ -148,6 +415,236 @@
           target="_blank" rel="noreferrer">Sketchfab model by DisneyCars</a>
       </div>
     </section>
+
+    <!-- R33 The Underrated GT-R — Slide-in Drawer -->
+    <aside class="r33-drawer" id="r33-drawer" aria-label="R33 history and achievements" aria-hidden="true">
+      <div class="r33-drawer__backdrop" id="r33-drawer-backdrop"></div>
+      <div class="r33-drawer__panel">
+        <header class="r33-drawer__header">
+          <div>
+            <p class="eyebrow" style="margin:0 0 8px"><br><br>Skyline GT-R BCNR33</p>
+            <h2 class="r33-drawer__title"> The Underrated GT-R.</h2>
+          </div>
+          <button class="r33-drawer__close" id="r33-drawer-close" aria-label="Close R33 history panel">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="r33-drawer__content" id="r33-drawer-content">
+
+          <section class="r33-cinema r33-reveal" aria-label="R33 feature film">
+            <video src="images/Nissan R33 GT-R LM Story The Only RWD GT-R - PistonPop (1080p, h264).mp4" autoplay loop
+              muted playsinline></video>
+            <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
+              <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <div class="r33-cinema__shade" aria-hidden="true"></div>
+            <div class="r33-cinema__copy">
+              <p class="eyebrow"></p>
+              <h3>First production car under 8 minutes.</h3>
+              <a class="r33-cinema__cta" href="#r33-briefing">Open the briefing</a>
+            </div>
+            <div class="r33-cinema__meters" aria-label="R33 headline records">
+              <span><strong>7:59</strong>Nürburgring Record</span>
+              <span><strong>188</strong>LM Limited Units</span>
+              <span><strong>400hp</strong>NISMO 400R</span>
+            </div>
+          </section>
+
+          <section class="r33-briefing" id="r33-briefing">
+            <div class="r33-briefing__intro r33-reveal">
+              <h3>Tap the dossier cards. Watch the story change.</h3>
+              <p>
+                The R33 improved stability, aerodynamics, and AWD technology. Often underrated when new, it proved
+                technically superior and became the first production car to break the 8-minute barrier at the
+                Nürburgring Nordschleife.
+              </p>
+            </div>
+
+            <div class="r33-briefing__grid">
+              <article class="r33-focus r33-reveal" aria-live="polite">
+                <span class="r33-focus__kicker" id="r33-focus-kicker">Nürburgring record</span>
+                <h3 id="r33-focus-title">First under 8 minutes.</h3>
+                <p id="r33-focus-copy">
+                  The R33 became the first production car to break the 8-minute barrier at the Nürburgring Nordschleife
+                  with a blistering 7:59.887 lap time, a full 21 seconds faster than the R32.
+                </p>
+                <div class="r33-focus__metric">
+                  <strong id="r33-focus-stat">7:59</strong>
+                  <span id="r33-focus-label">Nordschleife Lap</span>
+                </div>
+              </article>
+
+              <div class="r33-dossier r33-reveal" role="tablist" aria-label="R33 story selector">
+                <button class="r33-dossier__card is-active" type="button" data-story="nurburgring" role="tab"
+                  aria-selected="true">
+                  <span>01</span>
+                  <strong>Nürburgring</strong>
+                  <small>7:59.887 record</small>
+                </button>
+                <button class="r33-dossier__card" type="button" data-story="lemans" role="tab" aria-selected="false">
+                  <span>02</span>
+                  <strong>Le Mans</strong>
+                  <small>LM Limited</small>
+                </button>
+                <button class="r33-dossier__card" type="button" data-story="nismo" role="tab" aria-selected="false">
+                  <span>03</span>
+                  <strong>NISMO 400R</strong>
+                  <small>400 hp unicorn</small>
+                </button>
+                <button class="r33-dossier__card" type="button" data-story="autech" role="tab" aria-selected="false">
+                  <span>04</span>
+                  <strong>Autech</strong>
+                  <small>4-Door GT-R</small>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="r33-dashboard r33-reveal" aria-label="R33 technical dashboard">
+            <div class="r33-gauge">
+              <span>Nürburgring Time</span>
+              <strong>7:59</strong>
+              <i style="--fill:100%"></i>
+            </div>
+            <div class="r33-gauge">
+              <span>NISMO 400R Power</span>
+              <strong>400 hp</strong>
+              <i style="--fill:90%"></i>
+            </div>
+            <div class="r33-gauge">
+              <span>Production run</span>
+              <strong>16,668</strong>
+              <i style="--fill:38%"></i>
+            </div>
+            <div class="r33-gauge">
+              <span>Weight</span>
+              <strong>1540 kg</strong>
+              <i style="--fill:65%"></i>
+            </div>
+          </section>
+
+          <section class="r33-modern-timeline r33-reveal">
+            <h3>Rulebook Timeline</h3>
+            <div class="r33-modern-timeline__rail">
+              <article><span>1995</span>
+                <p>R33 GT-R launched with improved stability, aerodynamics, and ATTESA E-TS Pro.</p>
+              </article>
+              <article><span>1995</span>
+                <p>Breaks the 8-minute Nürburgring barrier and competes at the 24 Hours of Le Mans.</p>
+              </article>
+              <article><span>1996</span>
+                <p>LM Limited edition released to celebrate Le Mans participation (188 units).</p>
+              </article>
+              <article><span>1997</span>
+                <p>NISMO 400R launched, arguably the most special and powerful R33.</p>
+              </article>
+              <article><span>1998</span>
+                <p>Autech Version 40th Anniversary 4-door GT-R sedan built (416 units).</p>
+              </article>
+              <article><span>1998</span>
+                <p>Production ends. Considered the underrated GT-R but a brilliant engineering achievement.</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="r33-close-row">
+            <button class="r33-drawer__close r33-drawer__close--bottom" type="button"
+              aria-label="Close R33 history panel">
+              Close
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="r33-cards-grid">
+            <!-- Nürburgring Record -->
+            <div class="r33-card r33-reveal" style="--reveal-delay:0ms">
+              <span class="r33-card__accent" aria-hidden="true">7:59</span>
+              <h3>Nürburgring Record</h3>
+              <p>The R33 became legendary because it was the first production car to break the 8-minute Nürburgring
+                barrier. Its official lap was 7:59.887, which was an incredible 21 seconds faster than the R32. It
+                proved Nissan built much more than a heavier R32.</p>
+            </div>
+
+            <!-- LM Limited -->
+            <div class="r33-card r33-reveal" style="--reveal-delay:60ms">
+              <span class="r33-card__accent" aria-hidden="true">LM</span>
+              <h3>LM Limited (1996)</h3>
+              <p>Created to celebrate Nissan's Le Mans participation. Only 188 units were built. It featured Champion
+                Blue paint, a carbon fiber rear wing, special aero parts, and GT-R LM badging.</p>
+            </div>
+
+            <!-- NISMO 400R -->
+            <div class="r33-card r33-reveal" style="--reveal-delay:120ms">
+              <span class="r33-card__accent" aria-hidden="true">400R</span>
+              <h3>NISMO 400R (1997)</h3>
+              <p>Arguably the most special R33. Only 44 units were built. Features the RBX-GT2 2.8L twin-turbo engine
+                pushing 400 hp, upgraded suspension, wider body, and was built entirely by NISMO.</p>
+            </div>
+
+            <!-- Autech -->
+            <div class="r33-card r33-reveal" style="--reveal-delay:180ms">
+              <span class="r33-card__accent" aria-hidden="true">4-DR</span>
+              <h3>Autech Sedan (1998)</h3>
+              <p>An ultra-rare special edition 4-door GT-R sedan built for the Skyline's 40th anniversary. Only 416
+                units were produced, keeping the core GT-R performance in a four-door shell.</p>
+            </div>
+          </div>
+
+          <!-- Divider: Bold Statement -->
+          <div class="r33-statement r33-reveal" style="--reveal-delay:0ms">
+            <p>Smoother.<br>More stable.<br><strong>Extremely capable.</strong></p>
+          </div>
+
+          <!-- Production Stats -->
+          <div class="r33-production r33-reveal" style="--reveal-delay:0ms">
+            <div class="r33-production__grid">
+              <div>
+                <dt>Total Built</dt>
+                <dd>16,668</dd>
+              </div>
+              <div>
+                <dt>LM Limited</dt>
+                <dd>188</dd>
+              </div>
+              <div>
+                <dt>NISMO 400R</dt>
+                <dd>44</dd>
+              </div>
+              <div>
+                <dt>Autech 4-Door</dt>
+                <dd>416</dd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closing Statement -->
+          <div class="r33-statement r33-statement--final r33-reveal" style="--reveal-delay:0ms">
+            <p>They called it<br>underrated.<br><strong>It set<br>the record.</strong></p>
+          </div>
+
+        </div>
+      </div>
+    </aside>
 
     <section class="generation generation--dark generation--wide" id="r34">
       <div class="generation__media model-card">
@@ -182,8 +679,243 @@
             <dd>1,560 kg</dd>
           </div>
         </dl>
+        <button class="r34-drawer-trigger" id="r34-drawer-open" aria-controls="r34-drawer">
+          <span>Explore R34 History</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
     </section>
+
+    <!-- R34 The Icon — Slide-in Drawer -->
+    <aside class="r34-drawer" id="r34-drawer" aria-label="R34 history and achievements" aria-hidden="true">
+      <div class="r34-drawer__backdrop" id="r34-drawer-backdrop"></div>
+      <div class="r34-drawer__panel">
+        <header class="r34-drawer__header">
+          <div>
+            <p class="eyebrow" style="margin:0 0 8px"><br><br>Skyline GT-R BNR34</p>
+            <h2 class="r34-drawer__title"> The Icon.</h2>
+          </div>
+          <button class="r34-drawer__close" id="r34-drawer-close" aria-label="Close R34 history panel">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="r34-drawer__content" id="r34-drawer-content">
+
+          <section class="r34-cinema r34-reveal" aria-label="R34 feature film">
+            <video src="images/r34.mp4" autoplay loop muted playsinline></video>
+            <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
+              <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <div class="r34-cinema__shade" aria-hidden="true"></div>
+            <div class="r34-cinema__copy">
+              <p class="eyebrow">Pop Culture Legend</p>
+              <h3>The peak Skyline generation.</h3>
+              <a class="r34-cinema__cta" href="#r34-briefing">Open the briefing</a>
+            </div>
+            <div class="r34-cinema__meters" aria-label="R34 headline records">
+              <span><strong>11,578</strong>Total Produced</span>
+              <span><strong>1,000</strong>Nür Editions</span>
+              <span><strong>5.8"</strong>MFD Telemetry</span>
+            </div>
+          </section>
+
+          <section class="r34-briefing" id="r34-briefing">
+            <div class="r34-briefing__intro r34-reveal">
+              <h3>Tap the dossier cards. Watch the story change.</h3>
+              <p>
+                The R34 refined the GT-R formula with a shorter wheelbase, stronger chassis, and futuristic telemetry.
+                Its legendary tuning potential and pop culture appearances cemented it as the ultimate JDM icon.
+              </p>
+            </div>
+
+            <div class="r34-briefing__grid">
+              <article class="r34-focus r34-reveal" aria-live="polite">
+                <span class="r34-focus__kicker" id="r34-focus-kicker">5.8-inch MFD</span>
+                <h3 id="r34-focus-title">Telemetry for the street.</h3>
+                <p id="r34-focus-copy">
+                  The R34 introduced a futuristic 5.8-inch multifunction display (MFD) showing boost, oil and water
+                  temp, G-forces, and lap timing, blending video game aesthetics with real-world performance.
+                </p>
+                <div class="r34-focus__metric">
+                  <strong id="r34-focus-stat">5.8"</strong>
+                  <span id="r34-focus-label">Multifunction Display</span>
+                </div>
+              </article>
+
+              <div class="r34-dossier r34-reveal" role="tablist" aria-label="R34 story selector">
+                <button class="r34-dossier__card is-active" type="button" data-story="mfd" role="tab"
+                  aria-selected="true">
+                  <span>01</span>
+                  <strong>5.8" MFD</strong>
+                  <small>Advanced telemetry</small>
+                </button>
+                <button class="r34-dossier__card" type="button" data-story="vspec" role="tab" aria-selected="false">
+                  <span>02</span>
+                  <strong>V-Spec</strong>
+                  <small>Track focused</small>
+                </button>
+                <button class="r34-dossier__card" type="button" data-story="nur" role="tab" aria-selected="false">
+                  <span>03</span>
+                  <strong>Nür Editions</strong>
+                  <small>Ultimate collector</small>
+                </button>
+                <button class="r34-dossier__card" type="button" data-story="popculture" role="tab"
+                  aria-selected="false">
+                  <span>04</span>
+                  <strong>Icon</strong>
+                  <small>Movies & Games</small>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="r34-dashboard r34-reveal" aria-label="R34 technical dashboard">
+            <div class="r34-gauge">
+              <span>Real-world Power</span>
+              <strong>330+ hp</strong>
+              <i style="--fill:85%"></i>
+            </div>
+            <div class="r34-gauge">
+              <span>ATTESA E-TS Pro</span>
+              <strong>Active LSD</strong>
+              <i style="--fill:95%"></i>
+            </div>
+            <div class="r34-gauge">
+              <span>Production run</span>
+              <strong>11,578</strong>
+              <i style="--fill:25%"></i>
+            </div>
+            <div class="r34-gauge">
+              <span>Nür Editions</span>
+              <strong>1,000</strong>
+              <i style="--fill:10%"></i>
+            </div>
+          </section>
+
+          <section class="r34-modern-timeline r34-reveal">
+            <h3>Rulebook Timeline</h3>
+            <div class="r34-modern-timeline__rail">
+              <article><span>1999</span>
+                <p>R34 GT-R launched, featuring the innovative 5.8-inch multifunction display (MFD).</p>
+              </article>
+              <article><span>2000</span>
+                <p>V-Spec II introduced with stiffer suspension, larger rear brake rotors, and carbon fiber hood with
+                  NACA duct.</p>
+              </article>
+              <article><span>2001</span>
+                <p>M-Spec introduced, adding "Ripple Control" dampers and heated leather seats.</p>
+              </article>
+              <article><span>2002</span>
+                <p>Final Nür editions (M-Spec Nür, V-Spec II Nür) launched, honoring Nürburgring heritage. Only 1,000
+                  built.</p>
+              </article>
+              <article><span>2002</span>
+                <p>Production officially ends, marking the final Skyline GT-R generation before the R35.</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="r34-close-row">
+            <button class="r34-drawer__close r34-drawer__close--bottom" type="button"
+              aria-label="Close R34 history panel">
+              Close
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="r34-cards-grid">
+            <!-- MFD -->
+            <div class="r34-card r34-reveal" style="--reveal-delay:0ms">
+              <span class="r34-card__accent" aria-hidden="true">MFD</span>
+              <h3>Futuristic Telemetry</h3>
+              <p>The 5.8-inch display, designed partly with gaming expertise, brought race car data to the street.
+                Monitoring boost, temperatures, and G-forces felt revolutionary in 1999.</p>
+            </div>
+
+            <!-- V-Spec II -->
+            <div class="r34-card r34-reveal" style="--reveal-delay:60ms">
+              <span class="r34-card__accent" aria-hidden="true">CARBON</span>
+              <h3>V-Spec II Innovations</h3>
+              <p>Nissan replaced the aluminum hood with carbon fiber, adding a NACA duct to keep the RB26DETT cooler on
+                track. Stiffer suspension completed the track-focused package.</p>
+            </div>
+
+            <!-- Nür Editions -->
+            <div class="r34-card r34-reveal" style="--reveal-delay:120ms">
+              <span class="r34-card__accent" aria-hidden="true">NÜR</span>
+              <h3>The Ultimate Send-Off</h3>
+              <p>The 2002 Nür editions featured an upgraded N1-spec RB26 engine with larger turbochargers and ceramic
+                blades swapped for steel, allowing higher boost limits right from the factory.</p>
+            </div>
+
+            <!-- Pop Culture -->
+            <div class="r34-card r34-reveal" style="--reveal-delay:180ms">
+              <span class="r34-card__accent" aria-hidden="true">ICON</span>
+              <h3>Godzilla Returns</h3>
+              <p>Immortalized by Gran Turismo and the Fast & Furious movies, the R34 became the dream car for a
+                generation of enthusiasts, celebrated for its analog feel and endless tuning potential.</p>
+            </div>
+          </div>
+
+          <!-- Divider: Bold Statement -->
+          <div class="r34-statement r34-reveal" style="--reveal-delay:0ms">
+            <p>Perfect balance.<br>Analog feel.<br><strong>Motorsport DNA.</strong></p>
+          </div>
+
+          <!-- Production Stats -->
+          <div class="r34-production r34-reveal" style="--reveal-delay:0ms">
+            <div class="r34-production__grid">
+              <div>
+                <dt>Total Built</dt>
+                <dd>11,578</dd>
+              </div>
+              <div>
+                <dt>V-Spec / V-Spec II</dt>
+                <dd>6,041</dd>
+              </div>
+              <div>
+                <dt>Nür Editions</dt>
+                <dd>1,000</dd>
+              </div>
+              <div>
+                <dt>M-Spec</dt>
+                <dd>366</dd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closing Statement -->
+          <div class="r34-statement r34-statement--final r34-reveal" style="--reveal-delay:0ms">
+            <p>The peak of an era.<br><strong>A timeless<br>legend.</strong></p>
+          </div>
+
+        </div>
+      </div>
+    </aside>
 
     <section class="feature-stat">
       <div class="feature-stat__inner reveal">
@@ -265,8 +997,21 @@
         </div>
       </div>
       <div class="split-screen__image">
-        <video src="images/edit.mp4" autoplay loop muted playsinline
-          aria-label="GT-R generations evolution video"></video>
+        <video src="images/edit.mp4" autoplay loop muted playsinline></video>
+        <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
+          <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
       </div>
     </section>
 
@@ -333,12 +1078,12 @@
           </address>
           <nav aria-label="Contact and footer links">
             <a href="https://www.instagram.com/i.vibhor/" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="#credits">Credits</a>
+            <a href="credits.html">Credits</a>
             <a href="https://www.nissanusa.com/vehicles/sports-cars/gt-r.html" target="_blank" rel="noreferrer">Nissan
               GT-R</a>
           </nav>
           <p>
-            Fan-made GT-R tribute by gfxthecars. Not affiliated with or endorsed by Nissan. Trademarks, badges, car
+            Fan-made GT-R tribute by Vibhor. Not affiliated with or endorsed by Nissan. Trademarks, badges, car
             names, and 3D models belong to their respective owners and credited creators.
           </p>
         </div>

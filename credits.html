@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nissan GT-R Legacy | Credits & Resources</title>
+  <meta name="description"
+    content="Credits, references, and digital resources for the Project GTR tribute site.">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter+Tight:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Dedicated styles for credits page to ensure visual excellence and wow-factor */
+    .credits-body {
+      background: radial-gradient(circle at 50% 50%, #1a1a1a 0%, #0d0d0d 60%, #050505 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .credits-container {
+      width: min(1200px, 92vw);
+      margin: 120px auto 60px;
+      flex: 1;
+    }
+
+    .credits-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .credits-header h1 {
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, #fff 0%, #999 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+    }
+
+    .credits-header p {
+      font-family: var(--font-tech);
+      color: var(--red);
+      font-size: clamp(0.9rem, 1.5vw, 1.25rem);
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      font-weight: 700;
+    }
+
+    /* Bento Grid style */
+    .credits-bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 24px;
+    }
+
+    .bento-card {
+      background: rgba(16, 16, 16, 0.65);
+      border: 1px solid rgba(255, 0, 51, 0.15);
+      border-radius: 12px;
+      padding: 32px;
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bento-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--red), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .bento-card:hover {
+      border-color: rgba(255, 0, 51, 0.45);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(255, 0, 51, 0.08);
+      background: rgba(20, 20, 20, 0.85);
+    }
+
+    .bento-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .bento-card h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin: 0 0 20px;
+      color: #ffffff;
+      border-bottom: 2px solid rgba(255, 0, 51, 0.3);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bento-card h2 span {
+      color: var(--red);
+      font-family: var(--font-tech);
+      font-size: 1.1rem;
+    }
+
+    /* Col spans for grid layout */
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    .span-12 { grid-column: span 12; }
+
+    /* Creator profiles and asset list styling */
+    .asset-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .asset-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 12px;
+    }
+
+    .asset-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .asset-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      margin: 0;
+      color: #fff;
+    }
+
+    .asset-info p {
+      margin: 4px 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .asset-link {
+      font-family: var(--font-tech);
+      font-size: 0.78rem;
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: all 0.3s ease;
+      background: rgba(255, 0, 51, 0.05);
+    }
+
+    .asset-link:hover {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
+    }
+
+    /* Developer profile card */
+    .profile-card {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .profile-badge {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--red) 0%, var(--red-deep) 100%);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(255, 0, 51, 0.35);
+    }
+
+    .profile-details h3 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin: 0;
+      color: #fff;
+    }
+
+    .profile-details p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-family: var(--font-tech);
+      font-size: 0.85rem;
+    }
+
+    .profile-links {
+      margin-top: 24px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .profile-btn {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-family: var(--font-tech);
+      font-size: 0.82rem;
+      font-weight: 800;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .profile-btn--primary {
+      background: #fff;
+      color: #000;
+    }
+
+    .profile-btn--primary:hover {
+      background: var(--red);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
+    }
+
+    .profile-btn--secondary {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .profile-btn--secondary:hover {
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Stack items */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .stack-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stack-item h4 {
+      font-family: var(--font-tech);
+      font-size: 0.85rem;
+      margin: 0;
+      color: var(--red);
+      text-transform: uppercase;
+    }
+
+    .stack-item p {
+      font-size: 0.9rem;
+      margin: 6px 0 0;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .disclaimer-text {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    /* Return button styling */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      font-family: var(--font-tech);
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 18px;
+      border-radius: 30px;
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      background: rgba(255, 0, 51, 0.15);
+      border-color: var(--red);
+      transform: translateX(-3px);
+    }
+
+    /* Footer styling */
+    .credits-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px 0;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .credits-footer a {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .credits-footer a:hover {
+      color: var(--red);
+    }
+
+    /* Responsive grid columns */
+    @media (max-width: 1024px) {
+      .span-8, .span-6, .span-4 {
+        grid-column: span 12;
+      }
+      .stack-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .credits-container {
+        margin-top: 100px;
+      }
+      .stack-grid {
+        grid-template-columns: 1fr;
+      }
+      .profile-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile-links {
+        flex-direction: column;
+        width: 100%;
+      }
+      .asset-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .asset-link {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body class="credits-body">
+
+  <header class="topbar">
+    <a href="index.html" class="brand" aria-label="GT-R Legacy home">
+      <img src="images/gt-r-badge.svg" alt="">
+      <span>GT-R Legacy</span>
+    </a>
+    <a href="index.html" class="back-btn" aria-label="Back to experience">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to Experience
+    </a>
+  </header>
+
+  <main class="credits-container">
+    <div class="credits-header">
+      <h1>Credits & Resources</h1>
+      <p>Project GTR Lineage Tribute</p>
+    </div>
+
+    <div class="credits-bento">
+      <!-- Creator / Designer info -->
+      <section class="bento-card span-6" aria-label="Developer & Designer Profile">
+        <h2>Developer & Designer <span>// 01</span></h2>
+        <div class="profile-card">
+          <div class="profile-badge" aria-hidden="true">V</div>
+          <div class="profile-details">
+            <h3>Vibhor</h3>
+            <p>DESIGNER & WEB DEVELOPER</p>
+          </div>
+        </div>
+        <p style="margin: 20px 0 0; line-height: 1.5; color: var(--muted);">
+          Created this interactive, scroll-driven interactive tribute to capture the engineering and cultural evolution
+          of the iconic Nissan Skyline and GT-R family. Built with performance metrics and design elements inspired by Nissan racing heritage.
+        </p>
+        <div class="profile-links">
+          <a href="https://www.instagram.com/i.vibhor/" target="_blank" rel="noreferrer" class="profile-btn profile-btn--primary">Instagram</a>
+          <a href="mailto:vibhorsxni@gmail.com" class="profile-btn profile-btn--secondary">Email Me</a>
+        </div>
+      </section>
+
+      <!-- Tech Stack -->
+      <section class="bento-card span-6" aria-label="Technical Stack">
+        <h2>Technology & Core Stack <span>// 02</span></h2>
+        <div class="stack-grid">
+          <div class="stack-item">
+            <h4>Structure</h4>
+            <p>HTML5</p>
+          </div>
+          <div class="stack-item">
+            <h4>Styling</h4>
+            <p>CSS3 / Custom</p>
+          </div>
+          <div class="stack-item">
+            <h4>Behavior</h4>
+            <p>Vanilla JS</p>
+          </div>
+          <div class="stack-item">
+            <h4>3D Engine</h4>
+            <p>Sketchfab API</p>
+          </div>
+          <div class="stack-item">
+            <h4>Animation</h4>
+            <p>Canvas 2D</p>
+          </div>
+          <div class="stack-item">
+            <h4>Typography</h4>
+            <p>Google Fonts</p>
+          </div>
+        </div>
+        <p style="margin: 18px 0 0; line-height: 1.5; color: var(--muted); font-size: 0.9rem;">
+          The system uses hardware-accelerated Canvas renders for the background parallax vehicle and intersection observers for scroll-driven animations, ensuring smooth 60fps frame rates.
+        </p>
+      </section>
+
+      <!-- 3D Models Credits -->
+      <section class="bento-card span-8" aria-label="3D Model Attribution">
+        <h2>3D Interactive Assets <span>// 03</span></h2>
+        <ul class="asset-list">
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>Nissan Skyline GT-R R32</h3>
+              <p>Created by Lexyc16 on Sketchfab</p>
+            </div>
+            <a href="https://sketchfab.com/3d-models/nissan-skyline-r32-gt-r-8810e677eca543a6b840cf67dd064aa4"
+              target="_blank" rel="noreferrer" class="asset-link" aria-label="View R32 model by Lexyc16 on Sketchfab">View Model</a>
+          </li>
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>1997 Nissan Skyline GT-R R33</h3>
+              <p>Created by DisneyCars on Sketchfab</p>
+            </div>
+            <a href="https://sketchfab.com/3d-models/1997-nissan-skyline-gt-r-r33-d80ea5ec62ed433483fc62f55d14e410"
+              target="_blank" rel="noreferrer" class="asset-link" aria-label="View R33 model by DisneyCars on Sketchfab">View Model</a>
+          </li>
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>Nissan Skyline GT-R R34</h3>
+              <p>Created by Lexyc16 on Sketchfab</p>
+            </div>
+            <a href="https://sketchfab.com/3d-models/nissan-skyline-r34-gt-r-ff8fb2251dfa4bb9979e7022c5a6666c"
+              target="_blank" rel="noreferrer" class="asset-link" aria-label="View R34 model by Lexyc16 on Sketchfab">View Model</a>
+          </li>
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>Nissan GT-R R35</h3>
+              <p>Created by Ciasny on Sketchfab</p>
+            </div>
+            <a href="https://sketchfab.com/3d-models/nissan-gtr-r35-51c912a8310c4e00a82ad7673d84228a"
+              target="_blank" rel="noreferrer" class="asset-link" aria-label="View R35 model by Ciasny on Sketchfab">View Model</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Media references -->
+      <section class="bento-card span-4" aria-label="Media Credits">
+        <h2>Footage & Media <span>// 04</span></h2>
+        <ul class="asset-list">
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>Evolution Reel</h3>
+              <p>edit.mp4 video file</p>
+            </div>
+          </li>
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>Background Graphics</h3>
+              <p>Custom Skyline & GT-R image assets</p>
+            </div>
+          </li>
+          <li class="asset-item">
+            <div class="asset-info">
+              <h3>GT-R Badge & Logos</h3>
+              <p>Official SVG Vector badges</p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Disclaimer info -->
+      <section class="bento-card span-12" aria-label="Legal Disclaimer">
+        <h2>Legal Disclaimer & Attribution <span>// 05</span></h2>
+        <p class="disclaimer-text">
+          This project is a fan-made non-commercial web experience created to celebrate the history of the Nissan GT-R.
+          All trademarks, badge vectors, vehicle silhouette outlines, model designations, and official specifications
+          for the vehicles depicted (GT-R, Skyline, Nismo, RB26DETT, VR38DETT, ATTESA, and others) are the property of
+          Nissan Motor Co., Ltd. and their respective owners.
+        </p>
+        <p class="disclaimer-text" style="margin-top: 14px;">
+          All 3D files and textures are integrated in accordance with the Sketchfab Creative Commons attribution policies,
+          direct links are provided to authors' respective profiles. Use of company names, logos, or specifications does not
+          imply endorsement, partnership, or affiliation.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="credits-footer">
+    <div class="credits-container" style="margin: 0 auto; text-align: center;">
+      <p>Project GTR Tribute © 2026. Made with ❤️ by <a href="https://www.instagram.com/i.vibhor/" target="_blank" rel="noreferrer">Vibhor</a>.</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>
