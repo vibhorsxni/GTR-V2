@@ -1,933 +1,768 @@
-const canvas = document.querySelector("#gtr-stage");
-const ctx = canvas.getContext("2d");
-const loader = document.querySelector("#loader");
-const loaderStep = document.querySelector("#loader-step");
-const loaderPercent = document.querySelector("#loader-percent");
-const finale = document.querySelector("[data-finale]");
+// ==========================================================================
+// PROJECT GTR — THE EVOLUTION OF GODZILLA
+// Core Interactive Controller & Canvas Engine
+// ==========================================================================
 
-const state = {
-  width: 0,
-  height: 0,
-  dpr: 1,
-  scroll: 0,
-  targetScroll: 0,
-  mouseX: 0,
-  mouseY: 0,
-  paint: "#c0c0c0",
-};
+(function () {
+  'use strict';
 
-const loaderStartedAt = performance.now();
-const minimumLoaderTime = 2800;
-let pageLoaded = false;
-let loaderHidden = false;
-let loaderProgress = 0;
-const loaderSteps = [
-  { at: 0, label: "Priming twin turbos" },
-  { at: 28, label: "Warming ATTESA" },
-  { at: 54, label: "Spooling VR38" },
-  { at: 78, label: "Locking launch control" },
-  { at: 96, label: "Opening pit lane" },
-];
+  // --------------------------------------------------------------------------
+  // 1. Stage Canvas Engine & Preloader Simulation
+  // --------------------------------------------------------------------------
+  const canvas = document.querySelector('#gtr-stage');
+  const ctx = canvas ? canvas.getContext('2d') : null;
+  const loader = document.querySelector('#loader');
+  const loaderStep = document.querySelector('#loader-step');
+  const loaderPercent = document.querySelector('#loader-percent');
+  const finale = document.querySelector('[data-finale]');
 
-const paintStops = [
-  { at: 0, color: [192, 192, 192] },
-  { at: 0.22, color: [26, 26, 46] },
-  { at: 0.45, color: [255, 0, 51] },
-  { at: 0.68, color: [10, 10, 10] },
-  { at: 0.88, color: [245, 245, 245] },
-  { at: 1, color: [255, 0, 51] },
-];
+  const state = {
+    width: 0,
+    height: 0,
+    dpr: 1,
+    scroll: 0,
+    targetScroll: 0,
+    mouseX: 0,
+    mouseY: 0,
+    paint: '#c0c0c0',
+  };
 
-function resize() {
-  state.dpr = Math.min(window.devicePixelRatio || 1, 1.8);
-  state.width = window.innerWidth;
-  state.height = window.innerHeight;
-  canvas.width = Math.floor(state.width * state.dpr);
-  canvas.height = Math.floor(state.height * state.dpr);
-  canvas.style.width = `${state.width}px`;
-  canvas.style.height = `${state.height}px`;
-  ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
-}
+  const loaderStartedAt = performance.now();
+  const minimumLoaderTime = 2200;
+  let pageLoaded = false;
+  let loaderHidden = false;
+  let loaderProgress = 0;
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
-function mixColor(a, b, t) {
-  return [
-    Math.round(lerp(a[0], b[0], t)),
-    Math.round(lerp(a[1], b[1], t)),
-    Math.round(lerp(a[2], b[2], t)),
+  const loaderSteps = [
+    { at: 0, label: 'Priming twin turbos' },
+    { at: 28, label: 'Warming ATTESA E-TS' },
+    { at: 54, label: 'Spooling VR38DETT' },
+    { at: 78, label: 'Locking launch control' },
+    { at: 96, label: 'Opening pit lane' },
   ];
-}
 
-function colorAt(progress) {
-  const p = clamp(progress, 0, 1);
-  let left = paintStops[0];
-  let right = paintStops[paintStops.length - 1];
+  const paintStops = [
+    { at: 0, color: [192, 192, 192] },   // R32 Gun Grey Metallic
+    { at: 0.22, color: [26, 26, 46] },   // R33 Midnight Purple
+    { at: 0.45, color: [25, 45, 120] },  // R34 Bayside Blue
+    { at: 0.68, color: [255, 0, 51] },   // NISMO Super Red
+    { at: 0.88, color: [230, 230, 230] },// R35 Ultimate Silver
+    { at: 1.0, color: [255, 0, 51] },    // Godzilla Red
+  ];
 
-  for (let i = 0; i < paintStops.length - 1; i += 1) {
-    if (p >= paintStops[i].at && p <= paintStops[i + 1].at) {
-      left = paintStops[i];
-      right = paintStops[i + 1];
-      break;
+  function resize() {
+    if (!canvas || !ctx) return;
+    state.dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+    state.width = window.innerWidth;
+    state.height = window.innerHeight;
+    canvas.width = Math.floor(state.width * state.dpr);
+    canvas.height = Math.floor(state.height * state.dpr);
+    canvas.style.width = `${state.width}px`;
+    canvas.style.height = `${state.height}px`;
+    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function mixColor(a, b, t) {
+    return [
+      Math.round(lerp(a[0], b[0], t)),
+      Math.round(lerp(a[1], b[1], t)),
+      Math.round(lerp(a[2], b[2], t)),
+    ];
+  }
+
+  function colorAt(progress) {
+    const p = clamp(progress, 0, 1);
+    let left = paintStops[0];
+    let right = paintStops[paintStops.length - 1];
+
+    for (let i = 0; i < paintStops.length - 1; i += 1) {
+      if (p >= paintStops[i].at && p <= paintStops[i + 1].at) {
+        left = paintStops[i];
+        right = paintStops[i + 1];
+        break;
+      }
+    }
+
+    const local = (p - left.at) / Math.max(right.at - left.at, 0.001);
+    const [r, g, b] = mixColor(left.color, right.color, local);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function updateScroll() {
+    const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    state.targetScroll = window.scrollY / max;
+
+    // Topbar scroll state
+    const topbar = document.getElementById('topbar');
+    if (topbar) {
+      topbar.classList.toggle('is-scrolled', window.scrollY > 50);
+    }
+
+    // Back to top visibility
+    const backToTop = document.getElementById('back-to-top');
+    if (backToTop) {
+      backToTop.classList.toggle('is-visible', window.scrollY > 450);
     }
   }
 
-  const local = (p - left.at) / Math.max(right.at - left.at, 0.001);
-  const [r, g, b] = mixColor(left.color, right.color, local);
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
-function updateScroll() {
-  const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-  state.targetScroll = window.scrollY / max;
-}
-
-function updateFinaleProgress() {
-  if (!finale) {
-    return;
+  function updateFinaleProgress() {
+    if (!finale) return;
+    const rect = finale.getBoundingClientRect();
+    const travel = Math.max(rect.height - window.innerHeight, 1);
+    const progress = clamp(-rect.top / travel, 0, 1);
+    finale.style.setProperty('--finale-progress', progress.toFixed(3));
   }
 
-  const rect = finale.getBoundingClientRect();
-  const travel = Math.max(rect.height - window.innerHeight, 1);
-  const progress = clamp(-rect.top / travel, 0, 1);
-  finale.style.setProperty("--finale-progress", progress.toFixed(3));
-}
+  function drawBackground(progress) {
+    if (!ctx) return;
+    const gradient = ctx.createRadialGradient(
+      state.width * 0.5,
+      state.height * 0.54,
+      80,
+      state.width * 0.5,
+      state.height * 0.54,
+      Math.max(state.width, state.height) * 0.72
+    );
+    const redAlpha = 0.12 + Math.sin(progress * Math.PI * 2) * 0.05;
+    gradient.addColorStop(0, `rgba(255, 0, 51, ${redAlpha})`);
+    gradient.addColorStop(0.45, '#101010');
+    gradient.addColorStop(1, '#050505');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, state.width, state.height);
 
-function drawBackground(progress) {
-  const gradient = ctx.createRadialGradient(
-    state.width * 0.5,
-    state.height * 0.54,
-    80,
-    state.width * 0.5,
-    state.height * 0.54,
-    Math.max(state.width, state.height) * 0.72
-  );
-  const redAlpha = 0.12 + Math.sin(progress * Math.PI * 2) * 0.05;
-  gradient.addColorStop(0, `rgba(255, 0, 51, ${redAlpha})`);
-  gradient.addColorStop(0.45, "#101010");
-  gradient.addColorStop(1, "#050505");
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, state.width, state.height);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    const horizon = state.height * (0.64 + Math.sin(progress * Math.PI) * 0.04);
+    for (let i = -10; i <= 10; i += 1) {
+      const x = state.width * 0.5 + i * state.width * 0.075;
+      ctx.beginPath();
+      ctx.moveTo(state.width * 0.5, horizon);
+      ctx.lineTo(x, state.height);
+      ctx.stroke();
+    }
 
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.055)";
-  ctx.lineWidth = 1;
-  const horizon = state.height * (0.64 + Math.sin(progress * Math.PI) * 0.04);
-  for (let i = -10; i <= 10; i += 1) {
-    const x = state.width * 0.5 + i * state.width * 0.075;
+    for (let j = 0; j < 10; j += 1) {
+      const y = horizon + (j * j * state.height) / 90;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(state.width, y);
+      ctx.stroke();
+    }
+  }
+
+  function drawWheel(x, y, radius, squash) {
+    if (!ctx) return;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(1, squash);
+    ctx.fillStyle = '#050505';
     ctx.beginPath();
-    ctx.moveTo(state.width * 0.5, horizon);
-    ctx.lineTo(x, state.height);
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.36)';
+    ctx.lineWidth = Math.max(2, radius * 0.08);
     ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,0,51,.75)';
+    ctx.lineWidth = Math.max(1.5, radius * 0.04);
+    for (let i = 0; i < 6; i += 1) {
+      const angle = (Math.PI * 2 * i) / 6;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(Math.cos(angle) * radius * 0.72, Math.sin(angle) * radius * 0.72);
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
-  for (let j = 0; j < 10; j += 1) {
-    const y = horizon + (j * j * state.height) / 90;
+  function drawCar(progress) {
+    if (!ctx) return;
+    const orbit = progress * Math.PI * 2 + Math.PI * 0.18;
+    const perspective = Math.cos(orbit);
+    const side = Math.sin(orbit);
+    const base = Math.min(state.width * 0.72, state.height * 1.1);
+    const width = base * (0.74 + Math.abs(side) * 0.42);
+    const height = base * 0.24 * (0.82 + Math.abs(perspective) * 0.2);
+    const x = state.width * 0.5 + perspective * state.width * 0.05 + state.mouseX * 16;
+    const y = state.height * (0.56 + Math.sin(progress * Math.PI * 2) * 0.035) + state.mouseY * 10;
+    const skew = perspective * width * 0.1;
+    const nose = side > 0 ? 1 : -1;
+    const paint = colorAt(progress);
+
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.shadowColor = 'rgba(0, 0, 0, .75)';
+    ctx.shadowBlur = 50;
+    ctx.fillStyle = 'rgba(0, 0, 0, .55)';
     ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(state.width, y);
-    ctx.stroke();
-  }
-}
+    ctx.ellipse(0, height * 0.58, width * 0.48, height * 0.22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
 
-function drawWheel(x, y, radius, squash) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.scale(1, squash);
-  ctx.fillStyle = "#050505";
-  ctx.beginPath();
-  ctx.arc(0, 0, radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,.36)";
-  ctx.lineWidth = Math.max(2, radius * 0.08);
-  ctx.stroke();
-  ctx.strokeStyle = "rgba(255,0,51,.75)";
-  ctx.lineWidth = Math.max(1.5, radius * 0.04);
-  for (let i = 0; i < 6; i += 1) {
-    const angle = (Math.PI * 2 * i) / 6;
+    const body = new Path2D();
+    body.moveTo(-width * 0.48, height * 0.14);
+    body.bezierCurveTo(-width * 0.38, -height * 0.24, -width * 0.1 + skew, -height * 0.35, width * 0.2 + skew, -height * 0.22);
+    body.bezierCurveTo(width * 0.34 + skew, -height * 0.16, width * 0.46, -height * 0.03, width * 0.5, height * 0.16);
+    body.lineTo(width * 0.42, height * 0.35);
+    body.lineTo(-width * 0.42, height * 0.35);
+    body.bezierCurveTo(-width * 0.49, height * 0.32, -width * 0.55, height * 0.22, -width * 0.48, height * 0.14);
+    body.closePath();
+
+    const bodyGradient = ctx.createLinearGradient(-width * 0.5, -height * 0.3, width * 0.5, height * 0.3);
+    bodyGradient.addColorStop(0, '#070707');
+    bodyGradient.addColorStop(0.28, paint);
+    bodyGradient.addColorStop(0.6, paint);
+    bodyGradient.addColorStop(1, '#111111');
+    ctx.fillStyle = bodyGradient;
+    ctx.fill(body);
+    ctx.strokeStyle = 'rgba(255,255,255,.22)';
+    ctx.lineWidth = 2;
+    ctx.stroke(body);
+
+    // Windshield glass
+    ctx.fillStyle = 'rgba(185, 223, 230, .42)';
     ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(Math.cos(angle) * radius * 0.72, Math.sin(angle) * radius * 0.72);
+    ctx.moveTo(-width * 0.16 + skew * 0.65, -height * 0.22);
+    ctx.lineTo(width * 0.18 + skew * 0.65, -height * 0.16);
+    ctx.lineTo(width * 0.3 + skew * 0.35, height * 0.07);
+    ctx.lineTo(-width * 0.28 + skew * 0.35, height * 0.05);
+    ctx.closePath();
+    ctx.fill();
+
+    // Body accent line
+    ctx.strokeStyle = 'rgba(255, 0, 51, .82)';
+    ctx.lineWidth = Math.max(3, width * 0.012);
+    ctx.beginPath();
+    ctx.moveTo(-width * 0.45, height * 0.15);
+    ctx.lineTo(width * 0.47, height * 0.17);
     ctx.stroke();
+
+    // Lights
+    ctx.fillStyle = nose > 0 ? '#ff0033' : 'rgba(255,255,255,.82)';
+    ctx.fillRect(width * 0.4 * nose, height * 0.03, width * 0.08 * nose, height * 0.05);
+    ctx.fillStyle = nose > 0 ? 'rgba(255,255,255,.82)' : '#ff0033';
+    ctx.fillRect(-width * 0.48 * nose, height * 0.08, width * 0.08 * nose, height * 0.045);
+
+    // Wheels
+    const wheelOffset = width * (0.26 + Math.abs(perspective) * 0.05);
+    drawWheel(-wheelOffset, height * 0.34, height * 0.19, 0.88);
+    drawWheel(wheelOffset, height * 0.34, height * 0.19, 0.88);
+
+    // Badge
+    ctx.fillStyle = 'rgba(255, 0, 51, .85)';
+    ctx.font = `${Math.max(14, width * 0.035)}px Orbitron, monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('GT-R', 0, height * 0.23);
+    ctx.restore();
   }
-  ctx.restore();
-}
 
-function drawCar(progress) {
-  const orbit = progress * Math.PI * 2 + Math.PI * 0.18;
-  const perspective = Math.cos(orbit);
-  const side = Math.sin(orbit);
-  const base = Math.min(state.width * 0.72, state.height * 1.1);
-  const width = base * (0.74 + Math.abs(side) * 0.42);
-  const height = base * 0.24 * (0.82 + Math.abs(perspective) * 0.2);
-  const x = state.width * 0.5 + perspective * state.width * 0.05 + state.mouseX * 16;
-  const y = state.height * (0.56 + Math.sin(progress * Math.PI * 2) * 0.035) + state.mouseY * 10;
-  const skew = perspective * width * 0.1;
-  const nose = side > 0 ? 1 : -1;
-  const paint = colorAt(progress);
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.shadowColor = "rgba(0, 0, 0, .75)";
-  ctx.shadowBlur = 50;
-  ctx.fillStyle = "rgba(0, 0, 0, .55)";
-  ctx.beginPath();
-  ctx.ellipse(0, height * 0.58, width * 0.48, height * 0.22, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.shadowBlur = 0;
+  function render() {
+    state.scroll = lerp(state.scroll, state.targetScroll, 0.085);
+    updateFinaleProgress();
+    drawBackground(state.scroll);
+    drawCar(state.scroll);
+    if (!prefersReducedMotion) {
+      requestAnimationFrame(render);
+    }
+  }
 
-  const body = new Path2D();
-  body.moveTo(-width * 0.48, height * 0.14);
-  body.bezierCurveTo(-width * 0.38, -height * 0.24, -width * 0.1 + skew, -height * 0.35, width * 0.2 + skew, -height * 0.22);
-  body.bezierCurveTo(width * 0.34 + skew, -height * 0.16, width * 0.46, -height * 0.03, width * 0.5, height * 0.16);
-  body.lineTo(width * 0.42, height * 0.35);
-  body.lineTo(-width * 0.42, height * 0.35);
-  body.bezierCurveTo(-width * 0.49, height * 0.32, -width * 0.55, height * 0.22, -width * 0.48, height * 0.14);
-  body.closePath();
+  function hideLoader() {
+    if (loaderHidden || !loader) return;
+    loaderHidden = true;
+    loaderProgress = 100;
+    updateLoaderUi();
+    document.body.classList.remove('is-loading');
+    loader.classList.add('is-hidden');
+  }
 
-  const bodyGradient = ctx.createLinearGradient(-width * 0.5, -height * 0.3, width * 0.5, height * 0.3);
-  bodyGradient.addColorStop(0, "#070707");
-  bodyGradient.addColorStop(0.28, paint);
-  bodyGradient.addColorStop(0.6, paint);
-  bodyGradient.addColorStop(1, "#111111");
-  ctx.fillStyle = bodyGradient;
-  ctx.fill(body);
-  ctx.strokeStyle = "rgba(255,255,255,.22)";
-  ctx.lineWidth = 2;
-  ctx.stroke(body);
+  function updateLoaderUi() {
+    if (!loader || !loaderStep || !loaderPercent) return;
+    const currentStep = loaderSteps.reduce((active, step) => (
+      loaderProgress >= step.at ? step : active
+    ), loaderSteps[0]);
+    loader.style.setProperty('--loader-progress', `${loaderProgress}%`);
+    loaderStep.textContent = currentStep.label;
+    loaderPercent.textContent = `${Math.round(loaderProgress)}%`;
+  }
 
-  ctx.fillStyle = "rgba(185, 223, 230, .42)";
-  ctx.beginPath();
-  ctx.moveTo(-width * 0.16 + skew * 0.65, -height * 0.22);
-  ctx.lineTo(width * 0.18 + skew * 0.65, -height * 0.16);
-  ctx.lineTo(width * 0.3 + skew * 0.35, height * 0.07);
-  ctx.lineTo(-width * 0.28 + skew * 0.35, height * 0.05);
-  ctx.closePath();
-  ctx.fill();
+  function tickLoader() {
+    if (loaderHidden) return;
+    const elapsed = performance.now() - loaderStartedAt;
+    const timeProgress = clamp((elapsed / minimumLoaderTime) * 100, 0, 100);
+    const target = pageLoaded ? timeProgress : Math.min(timeProgress, 84);
+    loaderProgress = lerp(loaderProgress, target, 0.14);
+    updateLoaderUi();
 
-  ctx.strokeStyle = "rgba(255, 0, 51, .82)";
-  ctx.lineWidth = Math.max(3, width * 0.012);
-  ctx.beginPath();
-  ctx.moveTo(-width * 0.45, height * 0.15);
-  ctx.lineTo(width * 0.47, height * 0.17);
-  ctx.stroke();
+    if (pageLoaded && elapsed >= minimumLoaderTime && loaderProgress > 98) {
+      hideLoader();
+      return;
+    }
 
-  ctx.fillStyle = nose > 0 ? "#ff0033" : "rgba(255,255,255,.82)";
-  ctx.fillRect(width * 0.4 * nose, height * 0.03, width * 0.08 * nose, height * 0.05);
-  ctx.fillStyle = nose > 0 ? "rgba(255,255,255,.82)" : "#ff0033";
-  ctx.fillRect(-width * 0.48 * nose, height * 0.08, width * 0.08 * nose, height * 0.045);
+    requestAnimationFrame(tickLoader);
+  }
 
-  const wheelOffset = width * (0.26 + Math.abs(perspective) * 0.05);
-  drawWheel(-wheelOffset, height * 0.34, height * 0.19, 0.88);
-  drawWheel(wheelOffset, height * 0.34, height * 0.19, 0.88);
+  // --------------------------------------------------------------------------
+  // 2. Navigation, Mobile Menu & Active Spy
+  // --------------------------------------------------------------------------
+  function initNavigation() {
+    const navToggle = document.getElementById('nav-toggle');
+    const primaryNav = document.getElementById('primary-nav');
+    const navLinks = document.querySelectorAll('.nav a, .nav-link');
+    const backToTop = document.getElementById('back-to-top');
 
-  ctx.fillStyle = "rgba(255, 0, 51, .85)";
-  ctx.font = `${Math.max(14, width * 0.035)}px Orbitron, monospace`;
-  ctx.textAlign = "center";
-  ctx.fillText("GT-R", 0, height * 0.23);
-  ctx.restore();
-}
+    // Hamburger Toggle
+    if (navToggle && primaryNav) {
+      navToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = primaryNav.classList.toggle('is-open');
+        navToggle.setAttribute('aria-expanded', String(isOpen));
+      });
 
-function render() {
-  state.scroll = lerp(state.scroll, state.targetScroll, 0.075);
-  updateFinaleProgress();
-  drawBackground(state.scroll);
-  drawCar(state.scroll);
-  requestAnimationFrame(render);
-}
+      // Close when clicking nav links
+      navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          primaryNav.classList.remove('is-open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
 
-function setupReveals() {
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!primaryNav.contains(e.target) && !navToggle.contains(e.target)) {
+          primaryNav.classList.remove('is-open');
+          navToggle.setAttribute('aria-expanded', 'false');
         }
       });
-    },
-    { threshold: 0.18 }
-  );
-
-  document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
-}
-
-function hideLoader() {
-  if (loaderHidden) {
-    return;
-  }
-  loaderHidden = true;
-  loaderProgress = 100;
-  updateLoaderUi();
-  document.body.classList.remove("is-loading");
-  loader.classList.add("is-hidden");
-}
-
-function updateLoaderUi() {
-  const currentStep = loaderSteps.reduce((active, step) => (
-    loaderProgress >= step.at ? step : active
-  ), loaderSteps[0]);
-  loader.style.setProperty("--loader-progress", `${loaderProgress}%`);
-  loaderStep.textContent = currentStep.label;
-  loaderPercent.textContent = `${Math.round(loaderProgress)}%`;
-}
-
-function tickLoader() {
-  if (loaderHidden) {
-    return;
-  }
-
-  const elapsed = performance.now() - loaderStartedAt;
-  const timeProgress = clamp((elapsed / minimumLoaderTime) * 100, 0, 100);
-  const target = pageLoaded ? timeProgress : Math.min(timeProgress, 84);
-  loaderProgress = lerp(loaderProgress, target, 0.12);
-  updateLoaderUi();
-
-  if (pageLoaded && elapsed >= minimumLoaderTime && loaderProgress > 98) {
-    hideLoader();
-    return;
-  }
-
-  requestAnimationFrame(tickLoader);
-}
-
-document.body.classList.add("is-loading");
-resize();
-updateScroll();
-setupReveals();
-render();
-tickLoader();
-
-window.addEventListener("resize", resize);
-window.addEventListener("scroll", updateScroll, { passive: true });
-window.addEventListener("pointermove", event => {
-  state.mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-  state.mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
-});
-
-window.addEventListener("load", () => {
-  pageLoaded = true;
-});
-
-window.setTimeout(() => {
-  pageLoaded = true;
-}, 4300);
-
-/* ═══════════════════════════════════════════════════════
-   R32 GODZILLA CHRONICLES — DRAWER LOGIC
-   ═══════════════════════════════════════════════════════ */
-(function initR32Drawer() {
-  const drawer = document.getElementById("r32-drawer");
-  const openBtn = document.getElementById("r32-drawer-open");
-  const backdrop = document.getElementById("r32-drawer-backdrop");
-  const scrollContainer = document.getElementById("r32-drawer-content");
-  const panel = drawer?.querySelector(".r32-drawer__panel");
-  const closeButtons = drawer?.querySelectorAll(".r32-drawer__close") || [];
-
-  if (!drawer || !openBtn || !backdrop || !scrollContainer || !panel) {
-    return;
-  }
-
-  let drawerObserver = null;
-
-  function openDrawer() {
-    drawer.classList.add("is-open");
-    drawer.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    panel.scrollTop = 0;
-    setupDrawerReveals();
-  }
-
-  function closeDrawer() {
-    drawer.classList.remove("is-open");
-    drawer.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    resetDrawerReveals();
-    
-    const video = drawer.querySelector('video');
-    const btn = drawer.querySelector('.sound-toggle');
-    if (video && !video.muted) {
-      video.muted = true;
-      if (btn) {
-        btn.classList.remove('is-unmuted');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Unmute video');
-      }
-    }
-  }
-
-  function setupDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
     }
 
-    drawerObserver = new IntersectionObserver(
-      entries => {
+    // Back to top click
+    if (backToTop) {
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // Active Section Spy
+    const sections = document.querySelectorAll('section[id], header[id]');
+    if ('IntersectionObserver' in window && sections.length > 0) {
+      const spyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+            const id = entry.target.getAttribute('id');
+            navLinks.forEach(link => {
+              const href = link.getAttribute('href');
+              if (href === `#${id}`) {
+                link.classList.add('is-active');
+              } else if (href && href.startsWith('#')) {
+                link.classList.remove('is-active');
+              }
+            });
           }
         });
-      },
-      {
-        root: panel,
-        threshold: 0.12,
-      }
-    );
+      }, { rootMargin: '-20% 0px -70% 0px' });
 
-    scrollContainer.querySelectorAll(".r32-reveal").forEach(el => {
-      drawerObserver.observe(el);
-    });
+      sections.forEach(s => spyObserver.observe(s));
+    }
   }
 
-  function resetDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
-      drawerObserver = null;
-    }
-
-    scrollContainer.querySelectorAll(".r32-reveal").forEach(el => {
-      el.classList.remove("is-visible");
-    });
-  }
-
-  openBtn.addEventListener("click", openDrawer);
-  closeButtons.forEach(button => button.addEventListener("click", closeDrawer));
-  backdrop.addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && drawer.classList.contains("is-open")) {
-      closeDrawer();
-    }
-  });
-
-  const stories = {
-    jtcc: {
-      kicker: "Race record",
-      title: "29 starts. 29 wins.",
-      copy:
-        "From 1990 to 1993, the R32 GT-R swept every Japanese Touring Car Championship round it entered. The run became so complete that the car's class and balance of power had to be reconsidered.",
-      stat: "100%",
-      label: "JTCC win rate",
-    },
-    godzilla: {
-      kicker: "Bathurst shockwave",
-      title: "Japan's monster lands in Australia.",
-      copy:
-        "At Bathurst, the Skyline humbled local heroes with turbocharged pace and all-wheel-drive traction. The Godzilla nickname stuck because the car felt too powerful for the old order.",
-      stat: "2x",
-      label: "Bathurst 1000 wins",
-    },
-    attesa: {
-      kicker: "Grip system",
-      title: "ATTESA made traction strategic.",
-      copy:
-        "The electronic all-wheel-drive system could send torque forward when the rear tires needed help. That made the R32 brutally effective in exits, rain, and endurance racing.",
-      stat: "50%",
-      label: "Available front torque",
-    },
-    rb26: {
-      kicker: "Engine legend",
-      title: "The RB26 was born under-rated.",
-      copy:
-        "Officially held to the Japanese 276 hp agreement, the twin-turbo straight-six had much more headroom. Tuners found a deep iron-block foundation for serious boost.",
-      stat: "600+",
-      label: "Tuner-friendly horsepower",
-    },
-    Nismo: {
-      kicker: "Nismo & Special Editions",
-      title: "Nissan's Special Unit ",
-      copy:
-        "Nissan Motorsport International produced limited-run homologation specials: the N1 variant stripped weight and added a reinforced engine block for endurance racing, while the Nismo edition received exclusive aero parts and suspension tuning.",
-      stat: "510",
-      label: " N1 units ever built",
-    },
-  };
-
-  const storyButtons = scrollContainer.querySelectorAll("[data-story]");
-  const focusKicker = document.getElementById("r32-focus-kicker");
-  const focusTitle = document.getElementById("r32-focus-title");
-  const focusCopy = document.getElementById("r32-focus-copy");
-  const focusStat = document.getElementById("r32-focus-stat");
-  const focusLabel = document.getElementById("r32-focus-label");
-
-  function selectStory(storyKey) {
-    const story = stories[storyKey];
-
-    if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
+  // --------------------------------------------------------------------------
+  // 3. Scroll Reveals
+  // --------------------------------------------------------------------------
+  function setupReveals() {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
       return;
     }
 
-    focusKicker.textContent = story.kicker;
-    focusTitle.textContent = story.title;
-    focusCopy.textContent = story.copy;
-    focusStat.textContent = story.stat;
-    focusLabel.textContent = story.label;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+        }
+      });
+    }, { threshold: 0.15 });
 
-    storyButtons.forEach(button => {
-      const isActive = button.dataset.story === storyKey;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   }
 
-  storyButtons.forEach(button => {
-    button.addEventListener("click", () => selectStory(button.dataset.story));
-  });
-})();
+  // --------------------------------------------------------------------------
+  // 4. Generation Dossier Stories Data
+  // --------------------------------------------------------------------------
+  const generationStories = {
+    r32: {
+      jtcc: {
+        kicker: 'Race record',
+        title: '29 starts. 29 wins.',
+        copy: 'From 1990 to 1993, the R32 GT-R swept every Japanese Touring Car Championship round it entered. The run became so complete that the car\'s class and balance of power had to be reconsidered.',
+        stat: '100%',
+        label: 'JTCC win rate',
+      },
+      godzilla: {
+        kicker: 'Bathurst shockwave',
+        title: 'Japan\'s monster lands in Australia.',
+        copy: 'At Bathurst, the Skyline humbled local heroes with turbocharged pace and all-wheel-drive traction. The Godzilla nickname stuck because the car felt too powerful for the old order.',
+        stat: '2x',
+        label: 'Bathurst 1000 wins',
+      },
+      attesa: {
+        kicker: 'Grip system',
+        title: 'ATTESA made traction strategic.',
+        copy: 'The electronic all-wheel-drive system could send torque forward when the rear tires needed help. That made the R32 brutally effective in exits, rain, and endurance racing.',
+        stat: '50%',
+        label: 'Available front torque',
+      },
+      rb26: {
+        kicker: 'Engine legend',
+        title: 'The RB26 was born under-rated.',
+        copy: 'Officially held to the Japanese 276 hp agreement, the twin-turbo straight-six had much more headroom. Tuners found a deep iron-block foundation for serious boost.',
+        stat: '600+',
+        label: 'Tuner-friendly horsepower',
+      },
+      nismo: {
+        kicker: 'Homologation special',
+        title: 'Built for the track.',
+        copy: 'Nissan Motorsport International produced limited-run homologation specials: the N1 stripped weight and reinforced the block for endurance racing, while the Nismo edition received exclusive aero parts and suspension tuning.',
+        stat: '560',
+        label: 'Total N1 & Nismo units',
+      },
+    },
 
-/* ═══════════════════════════════════════════════════════
-   R33 UNDERRATED GT-R — DRAWER LOGIC
-   ═══════════════════════════════════════════════════════ */
-(function initR33Drawer() {
-  const drawer = document.getElementById("r33-drawer");
-  const openBtn = document.getElementById("r33-drawer-open");
-  const backdrop = document.getElementById("r33-drawer-backdrop");
-  const scrollContainer = document.getElementById("r33-drawer-content");
-  const panel = drawer?.querySelector(".r33-drawer__panel");
-  const closeButtons = drawer?.querySelectorAll(".r33-drawer__close") || [];
+    r33: {
+      nurburgring: {
+        kicker: 'Nürburgring record',
+        title: 'First under 8 minutes.',
+        copy: 'The R33 became the first production car to break the 8-minute barrier at the Nürburgring Nordschleife with a blistering 7:59.887 lap time, a full 21 seconds faster than the R32.',
+        stat: '7:59',
+        label: 'Nordschleife Lap',
+      },
+      lemans: {
+        kicker: 'Le Mans 1995',
+        title: 'LM Limited Edition.',
+        copy: 'Created to celebrate Nissan\'s Le Mans participation, where the R33 GT-R competed strongly against elite supercars. Only 188 LM Limited units were built featuring Champion Blue paint.',
+        stat: '188',
+        label: 'LM Units Built',
+      },
+      nismo: {
+        kicker: 'NISMO 400R',
+        title: 'The 400hp Unicorn.',
+        copy: 'Arguably the most special R33. Built by NISMO featuring an RBX-GT2 2.8L twin-turbo engine producing 400 hp. Today it is one of the rarest and most valuable Skyline GT-Rs ever.',
+        stat: '44',
+        label: '400R Units Built',
+      },
+      autech: {
+        kicker: 'Autech Sedan',
+        title: '4-Door GT-R.',
+        copy: 'An ultra-rare special edition 4-door GT-R sedan built for the Skyline\'s 40th anniversary. It maintained the RB26DETT and ATTESA AWD in a family-friendly package.',
+        stat: '416',
+        label: 'Sedans Built',
+      },
+    },
 
-  if (!drawer || !openBtn || !backdrop || !scrollContainer || !panel) {
-    return;
-  }
+    r34: {
+      mfd: {
+        kicker: '5.8-inch MFD',
+        title: 'Telemetry for the street.',
+        copy: 'The R34 introduced a futuristic 5.8-inch multifunction display (MFD) showing boost, oil and water temp, G-forces, and lap timing, blending video game aesthetics with real-world performance.',
+        stat: '5.8"',
+        label: 'Multifunction Display',
+      },
+      vspec: {
+        kicker: 'V-Spec & V-Spec II',
+        title: 'Track Focused.',
+        copy: 'The V-Spec offered better suspension tuning and an improved ATTESA E-TS Pro AWD calibration. The V-Spec II pushed it further with a carbon fiber hood featuring a NACA duct for enhanced engine cooling.',
+        stat: 'AWD',
+        label: 'ATTESA E-TS Pro',
+      },
+      nur: {
+        kicker: 'Nür Editions',
+        title: 'The Ultimate R34.',
+        copy: 'The M-Spec Nür and V-Spec II Nür were the final special editions honoring its Nürburgring testing heritage. Only 1,000 Nür editions were built, powered by the reinforced N1-spec engine block.',
+        stat: '1,000',
+        label: 'Nür Units Built',
+      },
+      popculture: {
+        kicker: 'Godzilla Returns',
+        title: 'Pop Culture Icon.',
+        copy: 'The R34 became globally legendary through games like Gran Turismo and Need for Speed, and movies like the Fast & Furious franchise, cementing its status as the peak Skyline generation.',
+        stat: '11,578',
+        label: 'Total Production',
+      },
+    },
 
-  let drawerObserver = null;
+    r35: {
+      vr38: {
+        kicker: 'Takumi Craftsmanship',
+        title: 'Five masters. Clean room assembly.',
+        copy: 'Every VR38DETT twin-turbo V6 engine is hand-assembled by one of only five master craftsmen—the Takumi—in a hermetically sealed clean room in Yokohama. A signed aluminum plaque with the builder\'s name is bolted to the front of every engine block.',
+        stat: '5',
+        label: 'Takumi Masters',
+      },
+      transaxle: {
+        kicker: 'Independent Rear Transaxle',
+        title: 'Dual-clutch GR6 transaxle layout.',
+        copy: 'The R35 pioneered the world\'s first independent rear transaxle AWD system. Two carbon-composite driveshafts link the engine to the rear gearbox, delivering optimal 54/46 dynamic weight balance under brutal acceleration.',
+        stat: '6-spd',
+        label: 'Dual-Clutch Transaxle',
+      },
+      nurburgring: {
+        kicker: '7:08.68 Lap Record',
+        title: 'Nürburgring Nordschleife conqueror.',
+        copy: 'In 2013, racing driver Michael Krumm piloted the Nissan GT-R NISMO with the N Attack Package around the Nürburgring Nordschleife in an astonishing 7:08.679, setting an all-time benchmark for volume production cars.',
+        stat: '7:08',
+        label: 'Green Hell Record',
+      },
+      nismo: {
+        kicker: 'NISMO GT3 Homologation',
+        title: '600 horsepower track terror.',
+        copy: 'The GT-R NISMO takes the VR38DETT to 600 hp with GT3-spec high-flow turbochargers, dry carbon-fiber aerodynamic bodywork generating 100 kg of downforce, and giant Brembo carbon-ceramic brakes.',
+        stat: '600 hp',
+        label: 'NISMO Peak Output',
+      },
+      farewell: {
+        kicker: '2007-2025 Era',
+        title: 'Eighteen years of supercar hunting.',
+        copy: 'Over an 18-year production run, the R35 constantly evolved and defended its title against exotics costing five times as much. The T-Spec Takumi and Skyline editions serve as the glorious final chapter.',
+        stat: '18 Yrs',
+        label: 'Reign of Godzilla',
+      },
+    },
+  };
 
-  function openDrawer() {
-    drawer.classList.add("is-open");
-    drawer.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    panel.scrollTop = 0;
-    setupDrawerReveals();
-  }
+  // --------------------------------------------------------------------------
+  // 5. Unified Drawer Manager
+  // --------------------------------------------------------------------------
+  function initGenerationDrawer(genKey) {
+    const drawer = document.getElementById(`${genKey}-drawer`);
+    const openBtn = document.getElementById(`${genKey}-drawer-open`);
+    const backdrop = document.getElementById(`${genKey}-drawer-backdrop`);
+    const scrollContainer = document.getElementById(`${genKey}-drawer-content`);
+    const panel = drawer ? drawer.querySelector(`.${genKey}-drawer__panel, .gen-drawer__panel`) : null;
+    const closeButtons = drawer ? drawer.querySelectorAll(`.${genKey}-drawer__close, .gen-drawer__close`) : [];
 
-  function closeDrawer() {
-    drawer.classList.remove("is-open");
-    drawer.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    resetDrawerReveals();
-    
-    const video = drawer.querySelector('video');
-    const btn = drawer.querySelector('.sound-toggle');
-    if (video && !video.muted) {
-      video.muted = true;
-      if (btn) {
-        btn.classList.remove('is-unmuted');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Unmute video');
+    if (!drawer || !openBtn || !backdrop || !scrollContainer || !panel) {
+      return;
+    }
+
+    let drawerObserver = null;
+
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      panel.scrollTop = 0;
+
+      // Play video if present
+      const video = drawer.querySelector('video');
+      if (video) {
+        video.play().catch(() => {});
+      }
+
+      setupDrawerReveals();
+
+      // Set focus to the first close button for keyboard accessibility
+      const firstClose = drawer.querySelector('button');
+      if (firstClose) {
+        firstClose.focus();
       }
     }
-  }
 
-  function setupDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
-    }
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      resetDrawerReveals();
 
-    drawerObserver = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
+      // Pause and mute video
+      const video = drawer.querySelector('video');
+      const soundBtn = drawer.querySelector('.sound-toggle');
+      if (video) {
+        video.pause();
+        if (!video.muted) {
+          video.muted = true;
+          if (soundBtn) {
+            soundBtn.classList.remove('is-unmuted');
+            soundBtn.setAttribute('aria-pressed', 'false');
+            soundBtn.setAttribute('aria-label', 'Unmute video');
           }
+        }
+      }
+
+      // Return focus to trigger
+      openBtn.focus();
+    }
+
+    function setupDrawerReveals() {
+      if (drawerObserver) {
+        drawerObserver.disconnect();
+      }
+
+      drawerObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        },
+        { root: panel, threshold: 0.12 }
+      );
+
+      scrollContainer.querySelectorAll(`.${genKey}-reveal, .gen-reveal`).forEach((el) => {
+        drawerObserver.observe(el);
+      });
+    }
+
+    function resetDrawerReveals() {
+      if (drawerObserver) {
+        drawerObserver.disconnect();
+        drawerObserver = null;
+      }
+      scrollContainer.querySelectorAll(`.${genKey}-reveal, .gen-reveal`).forEach((el) => {
+        el.classList.remove('is-visible');
+      });
+    }
+
+    openBtn.addEventListener('click', openDrawer);
+    closeButtons.forEach((btn) => btn.addEventListener('click', closeDrawer));
+    backdrop.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+
+    // Story selector tabs
+    const stories = generationStories[genKey];
+    if (stories) {
+      const storyButtons = scrollContainer.querySelectorAll('[data-story]');
+      const focusKicker = document.getElementById(`${genKey}-focus-kicker`);
+      const focusTitle = document.getElementById(`${genKey}-focus-title`);
+      const focusCopy = document.getElementById(`${genKey}-focus-copy`);
+      const focusStat = document.getElementById(`${genKey}-focus-stat`);
+      const focusLabel = document.getElementById(`${genKey}-focus-label`);
+
+      function selectStory(storyKey) {
+        const key = storyKey ? storyKey.toLowerCase() : '';
+        const story = stories[storyKey] || stories[key];
+        if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
+          return;
+        }
+
+        focusKicker.textContent = story.kicker;
+        focusTitle.textContent = story.title;
+        focusCopy.textContent = story.copy;
+        focusStat.textContent = story.stat;
+        focusLabel.textContent = story.label;
+
+        storyButtons.forEach((button) => {
+          const btnKey = (button.dataset.story || '').toLowerCase();
+          const isActive = btnKey === key || button.dataset.story === storyKey;
+          button.classList.toggle('is-active', isActive);
+          button.setAttribute('aria-selected', String(isActive));
         });
-      },
-      {
-        root: panel,
-        threshold: 0.12,
       }
-    );
 
-    scrollContainer.querySelectorAll(".r33-reveal").forEach(el => {
-      drawerObserver.observe(el);
+      storyButtons.forEach((button) => {
+        button.addEventListener('click', () => selectStory(button.dataset.story));
+      });
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 6. Sound Toggles
+  // --------------------------------------------------------------------------
+  function initSoundToggles() {
+    const soundToggles = document.querySelectorAll('.sound-toggle');
+    soundToggles.forEach((btn) => {
+      const container = btn.closest('section, .split-screen__image');
+      if (!container) return;
+      const video = container.querySelector('video');
+      if (!video) return;
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (video.muted) {
+          video.muted = false;
+          btn.classList.add('is-unmuted');
+          btn.setAttribute('aria-pressed', 'true');
+          btn.setAttribute('aria-label', 'Mute video');
+        } else {
+          video.muted = true;
+          btn.classList.remove('is-unmuted');
+          btn.setAttribute('aria-pressed', 'false');
+          btn.setAttribute('aria-label', 'Unmute video');
+        }
+      });
     });
   }
 
-  function resetDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
-      drawerObserver = null;
-    }
-
-    scrollContainer.querySelectorAll(".r33-reveal").forEach(el => {
-      el.classList.remove("is-visible");
-    });
-  }
-
-  openBtn.addEventListener("click", openDrawer);
-  closeButtons.forEach(button => button.addEventListener("click", closeDrawer));
-  backdrop.addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && drawer.classList.contains("is-open")) {
-      closeDrawer();
-    }
-  });
-
-  const stories = {
-    nurburgring: {
-      kicker: "Nürburgring record",
-      title: "First under 8 minutes.",
-      copy: "The R33 became the first production car to break the 8-minute barrier at the Nürburgring Nordschleife with a blistering 7:59.887 lap time, a full 21 seconds faster than the R32.",
-      stat: "7:59",
-      label: "Nordschleife Lap"
-    },
-    lemans: {
-      kicker: "Le Mans 1995",
-      title: "LM Limited Edition.",
-      copy: "Created to celebrate Nissan's Le Mans participation, where the R33 GT-R competed strongly against elite supercars. Only 188 LM Limited units were built featuring Champion Blue paint.",
-      stat: "188",
-      label: "LM Units Built"
-    },
-    nismo: {
-      kicker: "NISMO 400R",
-      title: "The 400hp Unicorn.",
-      copy: "Arguably the most special R33. Built by NISMO featuring an RBX-GT2 2.8L twin-turbo engine producing 400 hp. Today it is one of the rarest and most valuable Skyline GT-Rs ever.",
-      stat: "44",
-      label: "400R Units Built"
-    },
-    autech: {
-      kicker: "Autech Sedan",
-      title: "4-Door GT-R.",
-      copy: "An ultra-rare special edition 4-door GT-R sedan built for the Skyline's 40th anniversary. It maintained the RB26DETT and ATTESA AWD in a family-friendly package.",
-      stat: "416",
-      label: "Sedans Built"
-    }
-  };
-
-  const storyButtons = scrollContainer.querySelectorAll("[data-story]");
-  const focusKicker = document.getElementById("r33-focus-kicker");
-  const focusTitle = document.getElementById("r33-focus-title");
-  const focusCopy = document.getElementById("r33-focus-copy");
-  const focusStat = document.getElementById("r33-focus-stat");
-  const focusLabel = document.getElementById("r33-focus-label");
-
-  function selectStory(storyKey) {
-    const story = stories[storyKey];
-
-    if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
-      return;
-    }
-
-    focusKicker.textContent = story.kicker;
-    focusTitle.textContent = story.title;
-    focusCopy.textContent = story.copy;
-    focusStat.textContent = story.stat;
-    focusLabel.textContent = story.label;
-
-    storyButtons.forEach(button => {
-      const isActive = button.dataset.story === storyKey;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
-  }
-
-  storyButtons.forEach(button => {
-    button.addEventListener("click", () => selectStory(button.dataset.story));
-  });
-})();
-/* ==========================================================================
-   R34 DRAWER LOGIC
-   ========================================================================== */
-(function initR34Drawer() {
-  const drawer = document.getElementById("r34-drawer");
-  const openBtn = document.getElementById("r34-drawer-open");
-  const closeBtn = document.getElementById("r34-drawer-close");
-  const closeBottomBtn = document.querySelector(".r34-drawer__close--bottom");
-  const backdrop = document.getElementById("r34-drawer-backdrop");
-
-  if (!drawer || !openBtn || !closeBtn || !backdrop) return;
-
-  function openDrawer() {
-    drawer.classList.add("is-open");
-    drawer.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-  }
-
-  function closeDrawer() {
-    drawer.classList.remove("is-open");
-    drawer.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    
-    const video = drawer.querySelector('video');
-    const btn = drawer.querySelector('.sound-toggle');
-    if (video && !video.muted) {
-      video.muted = true;
-      if (btn) {
-        btn.classList.remove('is-unmuted');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Unmute video');
-      }
-    }
-  }
-
-  openBtn.addEventListener("click", openDrawer);
-  closeBtn.addEventListener("click", closeDrawer);
-  if (closeBottomBtn) closeBottomBtn.addEventListener("click", closeDrawer);
-  backdrop.addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && drawer.classList.contains("is-open")) {
-      closeDrawer();
-    }
-  });
-
-  // Story selector logic
-  const scrollContainer = drawer.querySelector(".r34-drawer__content");
-  if (!scrollContainer) return;
-
-  const stories = {
-    mfd: {
-      kicker: "Advanced Tech",
-      title: "5.8-inch MFD.",
-      copy: "Developed partly with gaming expertise, the MFD displayed turbo boost, oil temp, water temp, G-forces, lap timing, and throttle/braking info. It was incredibly futuristic for 1999.",
-      stat: "5.8\"",
-      label: "Screen Size"
-    },
-    vspec: {
-      kicker: "V-Spec",
-      title: "Aero & Chassis.",
-      copy: "The Victory Specifications brought better suspension tuning, track focus, and ATTESA AWD calibrations. V-Spec II added a carbon fiber hood with a NACA duct for enhanced cooling.",
-      stat: "2",
-      label: "V-Spec Generations"
-    },
-    nur: {
-      kicker: "N�r Editions",
-      title: "Final 1000 Cars.",
-      copy: "The final special edition honoring the N�rburgring testing heritage. Offered as M-Spec N�r or V-Spec II N�r, only 1000 were built total, making them extremely collectible today.",
-      stat: "1000",
-      label: "N�r Units Built"
-    },
-    popculture: {
-      kicker: "Pop Culture",
-      title: "Global Icon.",
-      copy: "The R34 became globally legendary through video games like Gran Turismo and Need for Speed, and movies like Fast & Furious as Paul Walker�s iconic vehicle.",
-      stat: "Icon",
-      label: "Legendary Status"
-    }
-  };
-
-  const storyButtons = scrollContainer.querySelectorAll("[data-story]");
-  const focusKicker = document.getElementById("r34-focus-kicker");
-  const focusTitle = document.getElementById("r34-focus-title");
-  const focusCopy = document.getElementById("r34-focus-copy");
-  const focusStat = document.getElementById("r34-focus-stat");
-  const focusLabel = document.getElementById("r34-focus-label");
-
-  function selectStory(storyKey) {
-    const story = stories[storyKey];
-
-    if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
-      return;
-    }
-
-    focusKicker.textContent = story.kicker;
-    focusTitle.textContent = story.title;
-    focusCopy.textContent = story.copy;
-    focusStat.textContent = story.stat;
-    focusLabel.textContent = story.label;
-
-    storyButtons.forEach(button => {
-      const isActive = button.dataset.story === storyKey;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
-  }
-
-  storyButtons.forEach(button => {
-    button.addEventListener("click", () => selectStory(button.dataset.story));
-  });
-})();
-
-
-/* -------------------------------------------------------
-   R34 GODZILLA RETURNS - DRAWER LOGIC
-   ------------------------------------------------------- */
-
-
-/* -------------------------------------------------------
-   R34 THE ICON — DRAWER LOGIC
-   ------------------------------------------------------- */
-(function initR34Drawer() {
-  const drawer = document.getElementById("r34-drawer");
-  const openBtn = document.getElementById("r34-drawer-open");
-  const backdrop = document.getElementById("r34-drawer-backdrop");
-  const scrollContainer = document.getElementById("r34-drawer-content");
-  const panel = drawer?.querySelector(".r34-drawer__panel");
-  const closeButtons = drawer?.querySelectorAll(".r34-drawer__close") || [];
-
-  if (!drawer || !openBtn || !backdrop || !scrollContainer || !panel) {
-    return;
-  }
-
-  let drawerObserver = null;
-
-  function openDrawer() {
-    drawer.classList.add("is-open");
-    drawer.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    panel.scrollTop = 0;
-    setupDrawerReveals();
-  }
-
-  function closeDrawer() {
-    drawer.classList.remove("is-open");
-    drawer.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    resetDrawerReveals();
-    
-    const video = drawer.querySelector('video');
-    const btn = drawer.querySelector('.sound-toggle');
-    if (video && !video.muted) {
-      video.muted = true;
-      if (btn) {
-        btn.classList.remove('is-unmuted');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Unmute video');
-      }
-    }
-  }
-
-  function setupDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
-    }
-
-    drawerObserver = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-          }
+  // --------------------------------------------------------------------------
+  // 7. 3D Model Loading Handlers
+  // --------------------------------------------------------------------------
+  function initModelCards() {
+    document.querySelectorAll('.model-card').forEach((card) => {
+      const iframe = card.querySelector('iframe');
+      const loaderEl = card.querySelector('.model-card__loading');
+      if (iframe && loaderEl) {
+        iframe.addEventListener('load', () => {
+          loaderEl.classList.add('is-loaded');
         });
-      },
-      {
-        root: panel,
-        threshold: 0.12,
+        // Timeout fallback if iframe load event is suppressed
+        setTimeout(() => {
+          loaderEl.classList.add('is-loaded');
+        }, 5000);
       }
-    );
-
-    scrollContainer.querySelectorAll(".r34-reveal").forEach(el => {
-      drawerObserver.observe(el);
     });
   }
 
-  function resetDrawerReveals() {
-    if (drawerObserver) {
-      drawerObserver.disconnect();
-      drawerObserver = null;
-    }
+  // --------------------------------------------------------------------------
+  // 8. Initialization Lifecycle
+  // --------------------------------------------------------------------------
+  document.body.classList.add('is-loading');
+  resize();
+  updateScroll();
+  setupReveals();
+  render();
+  tickLoader();
 
-    scrollContainer.querySelectorAll(".r34-reveal").forEach(el => {
-      el.classList.remove("is-visible");
-    });
-  }
-
-  openBtn.addEventListener("click", openDrawer);
-  closeButtons.forEach(button => button.addEventListener("click", closeDrawer));
-  backdrop.addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape" && drawer.classList.contains("is-open")) {
-      closeDrawer();
-    }
+  window.addEventListener('resize', resize);
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  window.addEventListener('pointermove', (event) => {
+    state.mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+    state.mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
   });
 
-  const stories = {
-    mfd: {
-      kicker: "5.8-inch MFD",
-      title: "Telemetry for the street.",
-      copy: "The R34 introduced a futuristic 5.8-inch multifunction display (MFD) showing boost, oil and water temp, G-forces, and lap timing, blending video game aesthetics with real-world performance.",
-      stat: "5.8\"",
-      label: "Multifunction Display"
-    },
-    vspec: {
-      kicker: "V-Spec & V-Spec II",
-      title: "Track Focused.",
-      copy: "The V-Spec offered better suspension tuning and an improved ATTESA AWD calibration. The V-Spec II pushed it further with a carbon fiber hood featuring a NACA duct for better cooling.",
-      stat: "AWD",
-      label: "ATTESA E-TS Pro"
-    },
-    nur: {
-      kicker: "Nür Editions",
-      title: "The Ultimate R34.",
-      copy: "The M-Spec Nür and V-Spec II Nür were the final special editions honoring its Nürburgring testing heritage. Only 1000 Nür editions were built, making them extremely collectible.",
-      stat: "1000",
-      label: "Nür Units Built"
-    },
-    popculture: {
-      kicker: "Godzilla Returns",
-      title: "Pop Culture Icon.",
-      copy: "The R34 became globally legendary through games like Gran Turismo and Need for Speed, and movies like the Fast & Furious franchise, cementing its status as the peak Skyline generation.",
-      stat: "11,578",
-      label: "Total Production"
-    }
-  };
+  window.addEventListener('load', () => {
+    pageLoaded = true;
+  });
 
-  const storyButtons = scrollContainer.querySelectorAll("[data-story]");
-  const focusKicker = document.getElementById("r34-focus-kicker");
-  const focusTitle = document.getElementById("r34-focus-title");
-  const focusCopy = document.getElementById("r34-focus-copy");
-  const focusStat = document.getElementById("r34-focus-stat");
-  const focusLabel = document.getElementById("r34-focus-label");
+  // Safety fallback: ensure preloader never gets stuck
+  window.setTimeout(() => {
+    pageLoaded = true;
+  }, 4000);
 
-  function selectStory(storyKey) {
-    const story = stories[storyKey];
-
-    if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
-      return;
-    }
-
-    focusKicker.textContent = story.kicker;
-    focusTitle.textContent = story.title;
-    focusCopy.textContent = story.copy;
-    focusStat.textContent = story.stat;
-    focusLabel.textContent = story.label;
-
-    storyButtons.forEach(button => {
-      const isActive = button.dataset.story === storyKey;
-      button.classList.toggle("is-active", isActive);
-      button.setAttribute("aria-selected", String(isActive));
-    });
-  }
-
-  storyButtons.forEach(button => {
-    button.addEventListener("click", () => selectStory(button.dataset.story));
+  // Initialize interactive components when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    initNavigation();
+    initGenerationDrawer('r32');
+    initGenerationDrawer('r33');
+    initGenerationDrawer('r34');
+    initGenerationDrawer('r35');
+    initSoundToggles();
+    initModelCards();
   });
 })();
-
-/* -------------------------------------------------------
-   SOUND TOGGLE LOGIC
-   ------------------------------------------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  const soundToggles = document.querySelectorAll('.sound-toggle');
-  
-  soundToggles.forEach(btn => {
-    // Cache the video element on init to avoid expensive DOM lookups on click
-    const container = btn.closest('section, .split-screen__image');
-    if (!container) return;
-    const video = container.querySelector('video');
-    if (!video) return;
-
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      if (video.muted) {
-        video.muted = false;
-        btn.classList.add('is-unmuted');
-        btn.setAttribute('aria-pressed', 'true');
-        btn.setAttribute('aria-label', 'Mute video');
-      } else {
-        video.muted = true;
-        btn.classList.remove('is-unmuted');
-        btn.setAttribute('aria-pressed', 'false');
-        btn.setAttribute('aria-label', 'Unmute video');
-      }
-    });
-  });
-});

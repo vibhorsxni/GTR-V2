@@ -3,17 +3,55 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nissan GT-R Legacy | Fan-Made Scroll Experience</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Project GTR | The Evolution of Godzilla — R32, R33, R34, R35</title>
   <meta name="description"
-    content="A fan-made scroll-driven tribute to the Nissan GT-R lineage, from R32 Godzilla to the R35 supercar killer.">
+    content="An interactive automotive tribute exploring the engineering, racing dominance, and cultural evolution of the Nissan Skyline GT-R: R32, R33, R34, and R35.">
+  <meta name="keywords" content="Nissan GT-R, Skyline GT-R, R32, R33, R34, R35, Godzilla, RB26DETT, VR38DETT, ATTESA, Nismo, JDM">
+  <meta name="author" content="Vibhor">
   <meta name="theme-color" content="#0a0a0a">
+  <link rel="canonical" href="https://vibhorsxni.github.io/GTR-V2/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vibhorsxni.github.io/GTR-V2/">
+  <meta property="og:title" content="Project GTR | The Evolution of Godzilla">
+  <meta property="og:description" content="Explore four generations of automotive supremacy: Nissan Skyline GT-R R32, R33, R34, and R35 with interactive 3D models and engineering dossiers.">
+  <meta property="og:image" content="https://vibhorsxni.github.io/GTR-V2/images/GTR.png">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://vibhorsxni.github.io/GTR-V2/">
+  <meta name="twitter:title" content="Project GTR | The Evolution of Godzilla">
+  <meta name="twitter:description" content="Explore four generations of automotive supremacy: Nissan Skyline GT-R R32, R33, R34, and R35 with interactive 3D models and engineering dossiers.">
+  <meta name="twitter:image" content="https://vibhorsxni.github.io/GTR-V2/images/GTR.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="images/gt-r-badge.svg">
+  <link rel="apple-touch-icon" href="images/gt-r-badge.svg">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter+Tight:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Project GTR: The Evolution of Godzilla",
+    "url": "https://vibhorsxni.github.io/GTR-V2/",
+    "description": "Interactive automotive tribute to the Nissan Skyline GT-R lineage covering R32, R33, R34, and R35 generations.",
+    "author": {
+      "@type": "Person",
+      "name": "Vibhor"
+    }
+  }
+  </script>
 </head>
 
 <body>
@@ -29,17 +67,26 @@
 
   <canvas class="stage" id="gtr-stage" aria-label="Animated Nissan GT-R silhouette"></canvas>
 
-  <header class="topbar">
+    <header class="topbar" id="topbar">
     <a href="#hero" class="brand" aria-label="GT-R Legacy home">
-      <img src="images/gt-r-badge.svg" alt="">
+      <img src="images/gt-r-badge.svg" alt="GT-R Badge">
       <span>GT-R Legacy</span>
     </a>
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="#r32">R32</a>
-      <a href="#r33">R33</a>
-      <a href="#r34">R34</a>
-      <a href="#r35">R35</a>
+    <nav class="nav" id="primary-nav" aria-label="Primary navigation">
+      <a href="#hero" class="nav-link is-active">Home</a>
+      <a href="#r32" class="nav-link">R32</a>
+      <a href="#r33" class="nav-link">R33</a>
+      <a href="#r34" class="nav-link">R34</a>
+      <a href="#r35" class="nav-link">R35</a>
+      <a href="#timeline" class="nav-link">Timeline</a>
+      <a href="#finale" class="nav-link">Finale</a>
+      <a href="credits.html" class="nav-link">Credits</a>
     </nav>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="primary-nav">
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+      <span class="nav-toggle__bar"></span>
+    </button>
   </header>
 
   <main>
@@ -47,12 +94,12 @@
       <div class="hero-model" aria-label="Sketchfab 3D model viewer for Nissan GT-R R35">
         <iframe title="Nissan GTR R35 by Ciasny on Sketchfab"
           src="https://sketchfab.com/models/51c912a8310c4e00a82ad7673d84228a/embed?autostart=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_watermark=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
       </div>
       <div class="hero__copy pinned-copy">
         <div class="hero__scroll-hint">Scroll Here to Enter</div>
         <p class="eyebrow">Nissan GT-R. R32 to R35.</p>
-        <h2>Legend<br>Never<br>dies</h2>
+        <h1 class="hero__heading">Legend<br>Never<br>dies</h1>
         <a class="button" href="#intro">Explore the Legacy</a>
       </div>
       <div class="hero__quote-container pinned-copy">
@@ -81,7 +128,7 @@
       <div class="generation__media model-card">
         <iframe title="Nissan Skyline R32 GT-R by Lexyc16 on Sketchfab"
           src="https://sketchfab.com/models/8810e677eca543a6b840cf67dd064aa4/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
         <a href="https://sketchfab.com/3d-models/nissan-skyline-r32-gt-r-8810e677eca543a6b840cf67dd064aa4"
           target="_blank" rel="noreferrer">Sketchfab model by Lexyc16</a>
       </div>
@@ -127,7 +174,7 @@
       <div class="r32-drawer__panel">
         <header class="r32-drawer__header">
           <div>
-            <p class="eyebrow" style="margin:0 0 8px"><br><br><br><br>Skyline GT-R BNR32</p>
+            <p class="eyebrow">Skyline GT-R BNR32</p>
             <h2 class="r32-drawer__title"> Godzilla Chronicles.</h2>
           </div>
           <button class="r32-drawer__close" id="r32-drawer-close" aria-label="Close R32 history panel">
@@ -144,7 +191,7 @@
           <section class="r32-cinema r32-reveal" aria-label="R32 feature film">
             <video
               src="images/1000+Hp Calsonic Skyline R32 GT-R  FULL BOOST Epic ONBOARD - HillClimb Monsters (1080p, h264).mp4"
-              autoplay loop muted playsinline></video>
+              preload="none" loop muted playsinline></video>
             <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
               <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
@@ -161,7 +208,7 @@
             </button>
             <div class="r32-cinema__shade" aria-hidden="true"></div>
             <div class="r32-cinema__copy">
-              <p class="eyebrow"></p>
+              <p class="eyebrow">Motorsport Dominance</p>
               <h3>The car that made the rulebook blink.</h3>
               <a class="r32-cinema__cta" href="#r32-briefing">Open the briefing</a>
             </div>
@@ -291,23 +338,6 @@
           </div>
 
           <div class="r32-cards-grid">
-            <!-- The Unbeatable Run -->
-            <div class="r32-card r32-reveal" style="--reveal-delay:0ms">
-              <span class="r32-card__accent" aria-hidden="true">29/29</span>
-              <h3>The Unbeatable Run</h3>
-              <p>Between 1990 and 1993, the R32 GT-R entered 29 rounds of the Japanese Touring Car Championship and won
-                every single one. No other production-based car has matched the streak. The dominance was so total that
-                rival manufacturers lobbied to have the GT-R class banned.</p>
-            </div>
-
-            <!-- Godzilla Origin -->
-            <div class="r32-card r32-reveal" style="--reveal-delay:60ms">
-              <span class="r32-card__accent" aria-hidden="true">ゴジラ</span>
-              <h3>Birth of "Godzilla"</h3>
-              <p>The nickname was born at the 1990 Bathurst 1000 in Australia. The R32 GT-R, piloted by Skaife and
-                Richards, destroyed the local V8 field so convincingly that the Australian motorsport press dubbed it
-                "Godzilla" — an unstoppable Japanese monster that couldn't be killed.</p>
-            </div>
 
             <!-- Bathurst Victories -->
             <div class="r32-card r32-reveal" style="--reveal-delay:120ms">
@@ -317,33 +347,6 @@
                 Australian-built Ford Sierras and Holden Commodores on their home soil. The wins were so controversial
                 that the FIA Group A regulations were eventually changed to exclude the GT-R.</p>
             </div>
-
-            <!-- Spa 24 Hours -->
-            <div class="r32-card r32-reveal" style="--reveal-delay:180ms">
-              <span class="r32-card__accent" aria-hidden="true">SPA</span>
-              <h3>Spa 24 Hours — 1991</h3>
-              <p>Not content with dominating Asia and Australia, the R32 GT-R crossed into European endurance racing and
-                won the grueling Spa 24 Hours in 1991 — proving that the ATTESA E-TS and RB26DETT combination could
-                conquer any circuit on the planet.</p>
-            </div>
-          </div>
-
-          <!-- Divider: Bold Statement -->
-          <div class="r32-statement r32-reveal" style="--reveal-delay:0ms">
-            <p>One car.<br>Four continents.<br><strong>Zero defeats.</strong></p>
-          </div>
-
-          <div class="r32-cards-grid">
-            <!-- ATTESA E-TS -->
-            <div class="r32-card r32-reveal" style="--reveal-delay:60ms">
-              <span class="r32-card__accent" aria-hidden="true">AWD</span>
-              <h3>ATTESA E-TS — The Secret Weapon</h3>
-              <p>The R32 was the first mass-produced Japanese sports car to ship with an electronically controlled
-                all-wheel-drive system. ATTESA E-TS could shift up to 50% of torque to the front wheels in under
-                milliseconds, giving the R32 grip that rear-drive rivals simply could not match in wet or dry
-                conditions.</p>
-            </div>
-
             <!-- RB26DETT -->
             <div class="r32-card r32-reveal" style="--reveal-delay:120ms">
               <span class="r32-card__accent" aria-hidden="true">RB26</span>
@@ -352,15 +355,6 @@
                 reality, every RB26DETT rolling off the Nissan line made closer to 320 hp. Tuners quickly discovered the
                 iron-block inline-six could handle 600+ hp on stock internals, and 1,000+ hp with forged components. The
                 RB26 became the most legendary tuner engine in history.</p>
-            </div>
-
-            <!-- Nismo & Special Editions -->
-            <div class="r32-card r32-reveal" style="--reveal-delay:180ms">
-              <span class="r32-card__accent" aria-hidden="true">NISMO</span>
-              <h3>Nismo & N1 Editions</h3>
-              <p>Nissan Motorsport International produced limited-run homologation specials: the N1 variant stripped
-                weight and added a reinforced engine block for endurance racing, while the Nismo edition received
-                exclusive aero parts and suspension tuning. Only 560 N1 units were ever built.</p>
             </div>
           </div>
           <!-- Closing Statement -->
@@ -410,7 +404,7 @@
       <div class="generation__media model-card">
         <iframe title="1997 Nissan Skyline GT-R R33 by DisneyCars on Sketchfab"
           src="https://sketchfab.com/models/d80ea5ec62ed433483fc62f55d14e410/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
         <a href="https://sketchfab.com/3d-models/1997-nissan-skyline-gt-r-r33-d80ea5ec62ed433483fc62f55d14e410"
           target="_blank" rel="noreferrer">Sketchfab model by DisneyCars</a>
       </div>
@@ -422,7 +416,7 @@
       <div class="r33-drawer__panel">
         <header class="r33-drawer__header">
           <div>
-            <p class="eyebrow" style="margin:0 0 8px"><br><br>Skyline GT-R BCNR33</p>
+            <p class="eyebrow">Skyline GT-R BCNR33</p>
             <h2 class="r33-drawer__title"> The Underrated GT-R.</h2>
           </div>
           <button class="r33-drawer__close" id="r33-drawer-close" aria-label="Close R33 history panel">
@@ -437,7 +431,7 @@
         <div class="r33-drawer__content" id="r33-drawer-content">
 
           <section class="r33-cinema r33-reveal" aria-label="R33 feature film">
-            <video src="images/Nissan R33 GT-R LM Story The Only RWD GT-R - PistonPop (1080p, h264).mp4" autoplay loop
+            <video src="images/Nissan R33 GT-R LM Story The Only RWD GT-R - PistonPop (1080p, h264).mp4" preload="none" loop
               muted playsinline></video>
             <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
               <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -455,7 +449,7 @@
             </button>
             <div class="r33-cinema__shade" aria-hidden="true"></div>
             <div class="r33-cinema__copy">
-              <p class="eyebrow"></p>
+              <p class="eyebrow">Motorsport Dominance</p>
               <h3>First production car under 8 minutes.</h3>
               <a class="r33-cinema__cta" href="#r33-briefing">Open the briefing</a>
             </div>
@@ -650,7 +644,7 @@
       <div class="generation__media model-card">
         <iframe title="Nissan Skyline R34 GT-R by Lexyc16 on Sketchfab"
           src="https://sketchfab.com/models/ff8fb2251dfa4bb9979e7022c5a6666c/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
         <a href="https://sketchfab.com/3d-models/nissan-skyline-r34-gt-r-ff8fb2251dfa4bb9979e7022c5a6666c"
           target="_blank" rel="noreferrer">Sketchfab model by Lexyc16</a>
       </div>
@@ -696,7 +690,7 @@
       <div class="r34-drawer__panel">
         <header class="r34-drawer__header">
           <div>
-            <p class="eyebrow" style="margin:0 0 8px"><br><br>Skyline GT-R BNR34</p>
+            <p class="eyebrow">Skyline GT-R BNR34</p>
             <h2 class="r34-drawer__title"> The Icon.</h2>
           </div>
           <button class="r34-drawer__close" id="r34-drawer-close" aria-label="Close R34 history panel">
@@ -711,7 +705,7 @@
         <div class="r34-drawer__content" id="r34-drawer-content">
 
           <section class="r34-cinema r34-reveal" aria-label="R34 feature film">
-            <video src="images/r34.mp4" autoplay loop muted playsinline></video>
+            <video src="images/r34.mp4" preload="none" loop muted playsinline></video>
             <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
               <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
@@ -931,7 +925,7 @@
       <div class="generation__media model-card">
         <iframe title="Nissan GTR R35 by Ciasny on Sketchfab"
           src="https://sketchfab.com/models/51c912a8310c4e00a82ad7673d84228a/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
         <a href="https://sketchfab.com/3d-models/nissan-gtr-r35-51c912a8310c4e00a82ad7673d84228a" target="_blank"
           rel="noreferrer">Sketchfab model by Ciasny</a>
       </div>
@@ -960,8 +954,251 @@
             <dd>205 mph</dd>
           </div>
         </dl>
+        <button class="r35-drawer-trigger gen-drawer-trigger" id="r35-drawer-open" aria-controls="r35-drawer" aria-expanded="false">
+          <span>Explore R35 History</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
     </section>
+
+    <!-- R35 The Supercar Killer — Slide-in Drawer -->
+    <aside class="r35-drawer gen-drawer" id="r35-drawer" aria-label="R35 Supercar Killer history and achievements" aria-hidden="true">
+      <div class="r35-drawer__backdrop gen-drawer__backdrop" id="r35-drawer-backdrop"></div>
+      <div class="r35-drawer__panel gen-drawer__panel">
+        <header class="r35-drawer__header gen-drawer__header">
+          <div>
+            <p class="eyebrow">CBA / DBA / 4BA-R35</p>
+            <h2 class="r35-drawer__title">The Supercar Killer.</h2>
+          </div>
+          <button class="r35-drawer__close gen-drawer__close" id="r35-drawer-close" aria-label="Close R35 history panel">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+
+        <div class="r35-drawer__content gen-drawer__content" id="r35-drawer-content">
+
+          <section class="r35-cinema r35-reveal" aria-label="R35 feature film">
+            <video src="images/edit.mp4" preload="none" loop muted playsinline></video>
+            <button class="sound-toggle" type="button" aria-label="Unmute video" aria-pressed="false">
+              <svg class="icon-unmuted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+              </svg>
+              <svg class="icon-muted" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            </button>
+            <div class="r35-cinema__shade" aria-hidden="true"></div>
+            <div class="r35-cinema__copy">
+              <p class="eyebrow">Peak Evolution</p>
+              <h3>No excuses. Pure engineering dominance.</h3>
+              <a class="r35-cinema__cta" href="#r35-briefing">Open the briefing</a>
+            </div>
+            <div class="r35-cinema__meters" aria-label="R35 headline records">
+              <span><strong>7:08.68</strong>Nürburgring Lap</span>
+              <span><strong>600 hp</strong>NISMO Output</span>
+              <span><strong>2.5 s</strong>0-60 Launch</span>
+            </div>
+          </section>
+
+          <section class="r35-briefing" id="r35-briefing">
+            <div class="r35-briefing__intro r35-reveal">
+              <h3>Tap the dossier cards. Watch the story change.</h3>
+              <p>
+                The R35 separated from the Skyline lineage to become a standalone global supercar slayer. Handcrafted
+                VR38DETT twin-turbo V6 power, an independent rear transaxle, and ATTESA E-TS Pro all-wheel drive redefined
+                performance physics for eighteen continuous years.
+              </p>
+            </div>
+
+            <div class="r35-briefing__grid">
+              <article class="r35-focus r35-reveal" aria-live="polite">
+                <span class="r35-focus__kicker" id="r35-focus-kicker">Takumi Craftsmanship</span>
+                <h3 id="r35-focus-title">Five masters. Clean room assembly.</h3>
+                <p id="r35-focus-copy">
+                  Every VR38DETT twin-turbo V6 engine is hand-assembled by one of only five master craftsmen—the Takumi—in
+                  a hermetically sealed clean room in Yokohama. A signed aluminum plaque with the builder's name is bolted
+                  to the front of every engine block.
+                </p>
+                <div class="r35-focus__metric">
+                  <strong id="r35-focus-stat">5</strong>
+                  <span id="r35-focus-label">Takumi Masters</span>
+                </div>
+              </article>
+
+              <div class="r35-dossier r35-reveal" role="tablist" aria-label="R35 story selector">
+                <button class="r35-dossier__card is-active" type="button" data-story="vr38" role="tab"
+                  aria-selected="true">
+                  <span>01</span>
+                  <strong>VR38DETT</strong>
+                  <small>Takumi handcrafted</small>
+                </button>
+                <button class="r35-dossier__card" type="button" data-story="transaxle" role="tab"
+                  aria-selected="false">
+                  <span>02</span>
+                  <strong>GR6 Transaxle</strong>
+                  <small>Dual-clutch layout</small>
+                </button>
+                <button class="r35-dossier__card" type="button" data-story="nurburgring" role="tab"
+                  aria-selected="false">
+                  <span>03</span>
+                  <strong>7:08 Nürburgring</strong>
+                  <small>Green Hell record</small>
+                </button>
+                <button class="r35-dossier__card" type="button" data-story="nismo" role="tab"
+                  aria-selected="false">
+                  <span>04</span>
+                  <strong>NISMO GT3</strong>
+                  <small>Track homologation</small>
+                </button>
+                <button class="r35-dossier__card" type="button" data-story="farewell" role="tab"
+                  aria-selected="false">
+                  <span>05</span>
+                  <strong>2007-2025</strong>
+                  <small>The final chapter</small>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section class="r35-dashboard r35-reveal" aria-label="R35 technical dashboard">
+            <div class="r35-gauge">
+              <span>Peak Power</span>
+              <strong>600 hp</strong>
+              <i style="--fill:100%"></i>
+            </div>
+            <div class="r35-gauge">
+              <span>ATTESA E-TS Pro</span>
+              <strong>Dual Clutch</strong>
+              <i style="--fill:98%"></i>
+            </div>
+            <div class="r35-gauge">
+              <span>Top Speed</span>
+              <strong>205 mph</strong>
+              <i style="--fill:92%"></i>
+            </div>
+            <div class="r35-gauge">
+              <span>0-60 mph</span>
+              <strong>2.5 s</strong>
+              <i style="--fill:99%"></i>
+            </div>
+          </section>
+
+          <section class="r35-modern-timeline r35-reveal">
+            <h3>Evolutionary Milestones</h3>
+            <div class="r35-modern-timeline__rail">
+              <article><span>2007</span>
+                <p>CBA-R35 debuts at Tokyo Motor Show with 480 hp; posts a staggering 7:38 Nürburgring lap time.</p>
+              </article>
+              <article><span>2011</span>
+                <p>DBA refresh elevates output to 530 hp, updates launch control, and cracks 0-60 in under 3.0 seconds.</p>
+              </article>
+              <article><span>2013</span>
+                <p>Michael Krumm records official 7:08.679 Nürburgring Nordschleife lap in GT-R NISMO with N Attack Package.</p>
+              </article>
+              <article><span>2017</span>
+                <p>Comprehensive mid-cycle redesign introduces signature V-motion grille, acoustic glass, and 565 hp.</p>
+              </article>
+              <article><span>2020</span>
+                <p>NISMO receives GT3 turbochargers, Brembo carbon-ceramic brakes, and scalloped carbon front fenders.</p>
+              </article>
+              <article><span>2024-2025</span>
+                <p>T-Spec Takumi Edition and Skyline Edition celebrate the final chapter of the 18-year R35 generation.</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="r35-close-row">
+            <button class="r35-drawer__close r35-drawer__close--bottom" type="button"
+              aria-label="Close R35 history panel">
+              Close
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="r35-cards-grid">
+            <div class="r35-card r35-reveal" style="--reveal-delay:0ms">
+              <span class="r35-card__accent" aria-hidden="true">VR38</span>
+              <h3>Takumi Clean Room</h3>
+              <p>Hand-crafted in a temperature-controlled sterile room by five certified master technicians. Every engine
+                bears a permanent aluminum badge commemorating its singular craftsman.</p>
+            </div>
+
+            <div class="r35-card r35-reveal" style="--reveal-delay:60ms">
+              <span class="r35-card__accent" aria-hidden="true">DCT</span>
+              <h3>Independent Rear Transaxle</h3>
+              <p>The world's first independent rear transaxle all-wheel-drive system. Dual carbon-composite driveshafts
+                distribute front and rear torque, delivering ideal 54/46 dynamic weight balance.</p>
+            </div>
+
+            <div class="r35-card r35-reveal" style="--reveal-delay:120ms">
+              <span class="r35-card__accent" aria-hidden="true">7:08</span>
+              <h3>Nürburgring Supremacy</h3>
+              <p>The 7:08.679 lap set by the NISMO N Attack Package humiliated exotic supercars costing three to five
+                times as much, solidifying the GT-R's rightful reputation as the ultimate Giant Killer.</p>
+            </div>
+
+            <div class="r35-card r35-reveal" style="--reveal-delay:180ms">
+              <span class="r35-card__accent" aria-hidden="true">AERO</span>
+              <h3>0.26 Drag Coefficient</h3>
+              <p>Engineered with Formula 1 aerodynamic simulation tools. Even with massive cooling ducts and positive
+                downforce, the R35 cuts through the air like a bullet train.</p>
+            </div>
+          </div>
+
+          <!-- Divider: Bold Statement -->
+          <div class="r35-statement r35-reveal" style="--reveal-delay:0ms">
+            <p>Handcrafted precision.<br>Relentless velocity.<br><strong>The Supercar Killer.</strong></p>
+          </div>
+
+          <!-- Production / Era Stats -->
+          <div class="r35-production r35-reveal" style="--reveal-delay:0ms">
+            <div class="r35-production__grid">
+              <div>
+                <dt>Production Era</dt>
+                <dd>2007 - 2025</dd>
+              </div>
+              <div>
+                <dt>NISMO Output</dt>
+                <dd>600 hp</dd>
+              </div>
+              <div>
+                <dt>Lateral Grip</dt>
+                <dd>1.15+ G</dd>
+              </div>
+              <div>
+                <dt>Takumi Masters</dt>
+                <dd>5 Artisans</dd>
+              </div>
+            </div>
+          </div>
+
+          <!-- Closing Statement -->
+          <div class="r35-statement r35-statement--final r35-reveal" style="--reveal-delay:0ms">
+            <p>Eighteen years of terrorizing supercars.<br><strong>Godzilla rests,<br>legend lives forever.</strong></p>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+
 
     <section class="timeline section-band split-screen" id="timeline">
       <div class="split-screen__content">
@@ -1032,7 +1269,7 @@
       <div class="finale__stage">
         <iframe id="finale-model" title="Nissan Skyline R34 GT-R by Lexyc16 on Sketchfab"
           src="https://sketchfab.com/models/ff8fb2251dfa4bb9979e7022c5a6666c/embed?api=1&autostart=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_watermark=0&dnt=1"
-          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
+          allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
         <div class="finale__shade" aria-hidden="true"></div>
         <div class="finale__scroll-blocker">
           <div class="blocker blocker-top"></div>
@@ -1070,7 +1307,7 @@
           <div class="finale__rule" aria-hidden="true"></div>
           <div class="finale__brand">
             <img src="images/gt-r-badge.svg" alt="GT-R badge">
-            <strong>Unbeaten Gorjira </strong>
+            <strong>Unbeaten Godzilla (ゴジラ) </strong>
           </div>
           <address>
             <a href="mailto:vibhorsxni@gmail.com">vibhorsxni@gmail.com</a>
@@ -1089,9 +1326,16 @@
         </div>
       </div>
     </section>
+
+    <!-- Floating Back to Top Button -->
+    <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
   </main>
 
-  <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js"></script>
   <script src="js/main.js" defer></script>
 </body>
 

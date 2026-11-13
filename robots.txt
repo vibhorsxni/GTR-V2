@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vibhorsxni.github.io/GTR-V2/sitemap.xml

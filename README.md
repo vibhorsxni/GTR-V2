@@ -1,4 +1,4 @@
-# Nissan GT-R Legacy Tribute | Fan-Made Scroll Experience
+# Project GTR V2 — The Evolution of Godzilla | Complete Automotive Tribute
 
 A premium, interactive, scroll-driven web tribute to the legendary **Nissan GT-R** lineage—from the motorsport-dominating R32 "Godzilla" to the modern R35 supercar killer.
 
@@ -57,7 +57,7 @@ The project can be run directly in any modern web browser.
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/vibhorsxni/Project-GTR.git
+   git clone https://github.com/vibhorsxni/GTR-V2.git
    cd Project-GTR
    ```
 2. **Open in browser**:
