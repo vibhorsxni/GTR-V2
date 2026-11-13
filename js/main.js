@@ -102,6 +102,13 @@
     state.targetScroll = window.scrollY / max;
     updateHeroProgress();
 
+    // Ensure canvas renders on scroll for users with reduced motion preferences
+    if (prefersReducedMotion) {
+      state.scroll = state.targetScroll;
+      drawBackground(state.scroll);
+      drawCar(state.scroll);
+    }
+
     // Topbar scroll state
     const topbar = document.getElementById('topbar');
     if (topbar) {
@@ -193,7 +200,7 @@
   }
 
   function drawCar(progress) {
-    if (!ctx) return;
+    if (!ctx || state.width <= 0 || state.height <= 0) return;
     const orbit = progress * Math.PI * 2 + Math.PI * 0.18;
     const perspective = Math.cos(orbit);
     const side = Math.sin(orbit);
@@ -313,7 +320,7 @@
     loaderProgress = lerp(loaderProgress, target, 0.14);
     updateLoaderUi();
 
-    if (pageLoaded && elapsed >= minimumLoaderTime && loaderProgress > 98) {
+    if (pageLoaded && (elapsed >= minimumLoaderTime + 2000 || (elapsed >= minimumLoaderTime && loaderProgress > 98))) {
       hideLoader();
       return;
     }
@@ -721,12 +728,18 @@
       const focusCopy = document.getElementById(`${genKey}-focus-copy`);
       const focusStat = document.getElementById(`${genKey}-focus-stat`);
       const focusLabel = document.getElementById(`${genKey}-focus-label`);
+      let storyTimeout = null;
 
       function selectStory(storyKey) {
         const key = storyKey ? storyKey.toLowerCase() : '';
         const story = stories[storyKey] || stories[key];
         if (!story || !focusKicker || !focusTitle || !focusCopy || !focusStat || !focusLabel) {
           return;
+        }
+
+        if (storyTimeout) {
+          clearTimeout(storyTimeout);
+          storyTimeout = null;
         }
 
         storyButtons.forEach((button) => {
@@ -739,7 +752,7 @@
         if (focusCard) {
           focusCard.style.opacity = '0.35';
           focusCard.style.transform = 'translateY(6px)';
-          setTimeout(() => {
+          storyTimeout = setTimeout(() => {
             focusKicker.textContent = story.kicker;
             focusTitle.textContent = story.title;
             focusCopy.textContent = story.copy;
@@ -747,6 +760,7 @@
             focusLabel.textContent = story.label;
             focusCard.style.opacity = '1';
             focusCard.style.transform = 'translateY(0)';
+            storyTimeout = null;
           }, 120);
         } else {
           focusKicker.textContent = story.kicker;
@@ -861,6 +875,9 @@
         if (!isTrackingTouch) return;
         isTrackingTouch = false;
 
+        // Ensure changedTouches exists
+        if (!e.changedTouches || e.changedTouches.length === 0) return;
+
         // When user is near the top of hero on mobile
         if (window.innerWidth <= 980 && window.scrollY < 120) {
           const touchEndY = e.changedTouches[0].clientY;
@@ -903,8 +920,8 @@
     pageLoaded = true;
   }, 4000);
 
-  // Initialize interactive components when DOM is ready
-  document.addEventListener('DOMContentLoaded', () => {
+  // Initialize interactive components when DOM is ready (or immediately if already interactive/complete)
+  function init() {
     initNavigation();
     initGenerationDrawer('r32');
     initGenerationDrawer('r33');
@@ -913,5 +930,11 @@
     initSoundToggles();
     initModelCards();
     initMobileLanding();
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
