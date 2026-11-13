@@ -106,7 +106,6 @@
     if (prefersReducedMotion) {
       state.scroll = state.targetScroll;
       drawBackground(state.scroll);
-      drawCar(state.scroll);
     }
 
     // Topbar scroll state
@@ -287,7 +286,6 @@
     updateHeroProgress();
     updateFinaleProgress();
     drawBackground(state.scroll);
-    drawCar(state.scroll);
     if (!prefersReducedMotion) {
       requestAnimationFrame(render);
     }

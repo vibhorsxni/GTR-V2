@@ -162,19 +162,21 @@ main {
 .hero {
   --hero-progress: 0;
   position: relative;
-  overflow: hidden;
   display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
   align-items: start;
 }
 
 .hero-model {
+  grid-column: 1;
+  grid-row: 1;
   overflow: hidden;
   position: sticky;
   top: 0;
   z-index: 1;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
 }
 
 .hero-model::after {
@@ -206,8 +208,10 @@ main {
 }
 
 .hero__copy {
+  grid-column: 1;
+  grid-row: 1;
   width: min(900px, 94vw);
-  margin-top: -100vh;
+  margin-top: 0;
   transform: translateY(calc(var(--hero-progress) * -10vh));
   opacity: clamp(0, calc(1.05 - (var(--hero-progress) * 2.2)), 1);
   will-change: transform, opacity;
@@ -258,8 +262,10 @@ main {
 }
 
 .hero__quote-container {
+  grid-column: 1;
+  grid-row: 1;
   width: min(420px, 32vw);
-  margin-top: -100vh;
+  margin-top: 0;
   margin-left: auto;
   pointer-events: none;
   display: flex;
