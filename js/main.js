@@ -813,7 +813,72 @@
   }
 
   // --------------------------------------------------------------------------
-  // 8. Initialization Lifecycle
+  // 8. Mobile Landing & Direct Scroll to Introduction
+  // --------------------------------------------------------------------------
+  function initMobileLanding() {
+    const heroSection = document.getElementById('hero');
+    const introSection = document.getElementById('intro');
+    const scrollHint = document.querySelector('.hero__scroll-hint');
+    const exploreBtn = document.querySelector('.hero__copy .button[href="#intro"]');
+
+    function scrollToIntro(e) {
+      if (e) e.preventDefault();
+      if (introSection) {
+        introSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+      }
+    }
+
+    if (scrollHint) {
+      scrollHint.addEventListener('click', scrollToIntro);
+      scrollHint.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          scrollToIntro(e);
+        }
+      });
+    }
+
+    if (exploreBtn) {
+      exploreBtn.addEventListener('click', scrollToIntro);
+    }
+
+    // Touch gesture handler: swiping up while landing on hero immediately glides to intro
+    if (heroSection) {
+      let touchStartY = 0;
+      let touchStartX = 0;
+      let isTrackingTouch = false;
+
+      heroSection.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches.length === 1) {
+          touchStartY = e.touches[0].clientY;
+          touchStartX = e.touches[0].clientX;
+          isTrackingTouch = true;
+        }
+      }, { passive: true });
+
+      heroSection.addEventListener('touchend', (e) => {
+        if (!isTrackingTouch) return;
+        isTrackingTouch = false;
+
+        // When user is near the top of hero on mobile
+        if (window.innerWidth <= 980 && window.scrollY < 120) {
+          const touchEndY = e.changedTouches[0].clientY;
+          const touchEndX = e.changedTouches[0].clientX;
+          const diffY = touchStartY - touchEndY;
+          const diffX = Math.abs(touchStartX - touchEndX);
+
+          // Intentional swipe up (finger moved up by > 40px)
+          if (diffY > 40 && diffY > diffX) {
+            scrollToIntro();
+          }
+        }
+      }, { passive: true });
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // 9. Initialization Lifecycle
   // --------------------------------------------------------------------------
   document.body.classList.add('is-loading');
   resize();
@@ -847,5 +912,6 @@
     initGenerationDrawer('r35');
     initSoundToggles();
     initModelCards();
+    initMobileLanding();
   });
 })();
