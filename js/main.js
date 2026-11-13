@@ -15,6 +15,7 @@
   const loaderStep = document.querySelector('#loader-step');
   const loaderPercent = document.querySelector('#loader-percent');
   const finale = document.querySelector('[data-finale]');
+  const hero = document.querySelector('#hero');
 
   const state = {
     width: 0,
@@ -99,6 +100,7 @@
   function updateScroll() {
     const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
     state.targetScroll = window.scrollY / max;
+    updateHeroProgress();
 
     // Topbar scroll state
     const topbar = document.getElementById('topbar');
@@ -111,6 +113,14 @@
     if (backToTop) {
       backToTop.classList.toggle('is-visible', window.scrollY > 450);
     }
+  }
+
+  function updateHeroProgress() {
+    if (!hero) return;
+    const rect = hero.getBoundingClientRect();
+    const travel = Math.max(rect.height - window.innerHeight, 1);
+    const progress = clamp(-rect.top / travel, 0, 1);
+    hero.style.setProperty('--hero-progress', progress.toFixed(3));
   }
 
   function updateFinaleProgress() {
@@ -267,6 +277,7 @@
 
   function render() {
     state.scroll = lerp(state.scroll, state.targetScroll, 0.085);
+    updateHeroProgress();
     updateFinaleProgress();
     drawBackground(state.scroll);
     drawCar(state.scroll);
@@ -316,30 +327,49 @@
   function initNavigation() {
     const navToggle = document.getElementById('nav-toggle');
     const primaryNav = document.getElementById('primary-nav');
+    const navBackdrop = document.getElementById('nav-backdrop');
     const navLinks = document.querySelectorAll('.nav a, .nav-link');
     const backToTop = document.getElementById('back-to-top');
 
-    // Hamburger Toggle
+    function closeMobileNav() {
+      if (primaryNav) primaryNav.classList.remove('is-open');
+      if (navBackdrop) navBackdrop.classList.remove('is-open');
+      if (navToggle) {
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    // Hamburger Toggle & Mobile Navigation
     if (navToggle && primaryNav) {
       navToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = primaryNav.classList.toggle('is-open');
+        if (navBackdrop) navBackdrop.classList.toggle('is-open', isOpen);
         navToggle.setAttribute('aria-expanded', String(isOpen));
       });
 
       // Close when clicking nav links
       navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-          primaryNav.classList.remove('is-open');
-          navToggle.setAttribute('aria-expanded', 'false');
-        });
+        link.addEventListener('click', closeMobileNav);
       });
+
+      // Close when clicking backdrop
+      if (navBackdrop) {
+        navBackdrop.addEventListener('click', closeMobileNav);
+      }
 
       // Close when clicking outside
       document.addEventListener('click', (e) => {
         if (!primaryNav.contains(e.target) && !navToggle.contains(e.target)) {
-          primaryNav.classList.remove('is-open');
-          navToggle.setAttribute('aria-expanded', 'false');
+          closeMobileNav();
+        }
+      });
+
+      // Close on Escape key and return focus
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && primaryNav.classList.contains('is-open')) {
+          closeMobileNav();
+          navToggle.focus();
         }
       });
     }
@@ -351,13 +381,17 @@
       });
     }
 
-    // Active Section Spy
-    const sections = document.querySelectorAll('section[id], header[id]');
+    // Active Section Spy (Restricted to top-level sections so drawers do not pollute active state)
+    const trackedIds = ['hero', 'intro', 'r32', 'r33', 'r34', 'r35', 'timeline', 'credits', 'finale'];
+    const sections = Array.from(document.querySelectorAll('section[id], header[id]'))
+      .filter(el => trackedIds.includes(el.id));
+
     if ('IntersectionObserver' in window && sections.length > 0) {
       const spyObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('id');
+            let id = entry.target.getAttribute('id');
+            if (id === 'intro') id = 'hero'; // Heritage intro maps to Hero/Overview
             navLinks.forEach(link => {
               const href = link.getAttribute('href');
               if (href === `#${id}`) {
@@ -637,16 +671,51 @@
     closeButtons.forEach((btn) => btn.addEventListener('click', closeDrawer));
     backdrop.addEventListener('click', closeDrawer);
 
+    // Keyboard navigation: Escape to close
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && drawer.classList.contains('is-open')) {
         closeDrawer();
       }
     });
 
+    // Keyboard navigation: Modal focus trap inside panel
+    panel.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab' || !drawer.classList.contains('is-open')) return;
+      const focusables = panel.querySelectorAll('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusables.length === 0) return;
+      const firstEl = focusables[0];
+      const lastEl = focusables[focusables.length - 1];
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstEl) {
+          event.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          event.preventDefault();
+          firstEl.focus();
+        }
+      }
+    });
+
+    // Cinema CTA button smooth scrolling
+    const cinemaCta = drawer.querySelector(`.${genKey}-cinema__cta, .gen-cinema__cta`);
+    if (cinemaCta) {
+      cinemaCta.addEventListener('click', (e) => {
+        e.preventDefault();
+        const briefing = drawer.querySelector(`.${genKey}-briefing, .gen-briefing`);
+        if (briefing && panel) {
+          panel.scrollTo({ top: briefing.offsetTop - 20, behavior: 'smooth' });
+        }
+      });
+    }
+
     // Story selector tabs
     const stories = generationStories[genKey];
     if (stories) {
       const storyButtons = scrollContainer.querySelectorAll('[data-story]');
+      const focusCard = scrollContainer.querySelector(`.${genKey}-focus, .gen-focus`);
       const focusKicker = document.getElementById(`${genKey}-focus-kicker`);
       const focusTitle = document.getElementById(`${genKey}-focus-title`);
       const focusCopy = document.getElementById(`${genKey}-focus-copy`);
@@ -660,18 +729,32 @@
           return;
         }
 
-        focusKicker.textContent = story.kicker;
-        focusTitle.textContent = story.title;
-        focusCopy.textContent = story.copy;
-        focusStat.textContent = story.stat;
-        focusLabel.textContent = story.label;
-
         storyButtons.forEach((button) => {
           const btnKey = (button.dataset.story || '').toLowerCase();
           const isActive = btnKey === key || button.dataset.story === storyKey;
           button.classList.toggle('is-active', isActive);
           button.setAttribute('aria-selected', String(isActive));
         });
+
+        if (focusCard) {
+          focusCard.style.opacity = '0.35';
+          focusCard.style.transform = 'translateY(6px)';
+          setTimeout(() => {
+            focusKicker.textContent = story.kicker;
+            focusTitle.textContent = story.title;
+            focusCopy.textContent = story.copy;
+            focusStat.textContent = story.stat;
+            focusLabel.textContent = story.label;
+            focusCard.style.opacity = '1';
+            focusCard.style.transform = 'translateY(0)';
+          }, 120);
+        } else {
+          focusKicker.textContent = story.kicker;
+          focusTitle.textContent = story.title;
+          focusCopy.textContent = story.copy;
+          focusStat.textContent = story.stat;
+          focusLabel.textContent = story.label;
+        }
       }
 
       storyButtons.forEach((button) => {

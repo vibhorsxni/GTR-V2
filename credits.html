@@ -533,7 +533,12 @@
       <p>Project GTR Tribute © 2026. Made with ❤️ by <a href="https://www.instagram.com/i.vibhor/" target="_blank" rel="noreferrer">Vibhor</a>.</p>
     </div>
   </footer>
-
+  <script>
+    window.addEventListener('scroll', () => {
+      const topbar = document.querySelector('.topbar');
+      if (topbar) topbar.classList.toggle('is-scrolled', window.scrollY > 30);
+    }, { passive: true });
+  </script>
 </body>
 
 </html>

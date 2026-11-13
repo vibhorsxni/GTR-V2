@@ -88,6 +88,7 @@
       <span class="nav-toggle__bar"></span>
     </button>
   </header>
+  <div class="nav-backdrop" id="nav-backdrop" aria-hidden="true"></div>
 
   <main>
     <section class="hero scroll-scene" id="hero">
@@ -114,9 +115,10 @@
         <div class="section-label">
           <span>Introduction</span>
         </div>
+        <h2 class="sr-only">Heritage & Introduction</h2>
         <p class="intro__lead">
           Built from racing obsession and street-car stubbornness, Nissan GT-R became a machine that made lap timers
-          nervous. Four generations turned to one badge into a global ICON for grip, boost, and impossible pace.
+          nervous. Four generations turned one badge into a global ICON for grip, boost, and impossible pace.
         </p>
       </div>
       <div class="split-screen__image">
@@ -129,6 +131,10 @@
         <iframe title="Nissan Skyline R32 GT-R by Lexyc16 on Sketchfab"
           src="https://sketchfab.com/models/8810e677eca543a6b840cf67dd064aa4/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
           allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
+        <div class="model-card__loading" aria-hidden="true">
+          <div class="model-card__spinner"></div>
+          <span>Loading 3D Model</span>
+        </div>
         <a href="https://sketchfab.com/3d-models/nissan-skyline-r32-gt-r-8810e677eca543a6b840cf67dd064aa4"
           target="_blank" rel="noreferrer">Sketchfab model by Lexyc16</a>
       </div>
@@ -157,7 +163,7 @@
             <dd>29/29 wins</dd>
           </div>
         </dl>
-        <button class="r32-drawer-trigger" id="r32-drawer-open" aria-controls="r32-drawer">
+        <button class="r32-drawer-trigger" id="r32-drawer-open" aria-controls="r32-drawer" aria-expanded="false">
           <span>Explore R32 History</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -169,13 +175,13 @@
     </section>
 
     <!-- R32 Godzilla Chronicles — Slide-in Drawer -->
-    <aside class="r32-drawer" id="r32-drawer" aria-label="R32 Godzilla history and achievements" aria-hidden="true">
+    <aside class="r32-drawer" id="r32-drawer" role="dialog" aria-modal="true" aria-label="R32 Godzilla history and achievements" aria-hidden="true">
       <div class="r32-drawer__backdrop" id="r32-drawer-backdrop"></div>
       <div class="r32-drawer__panel">
         <header class="r32-drawer__header">
           <div>
             <p class="eyebrow">Skyline GT-R BNR32</p>
-            <h2 class="r32-drawer__title"> Godzilla Chronicles.</h2>
+            <h2 class="r32-drawer__title">Godzilla Chronicles.</h2>
           </div>
           <button class="r32-drawer__close" id="r32-drawer-close" aria-label="Close R32 history panel">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -264,7 +270,7 @@
                   <strong>RB26DETT</strong>
                   <small>Built for boost</small>
                 </button>
-                <button class="r32-dossier__card" type="button" data-story="Nismo" role="tab" aria-selected="false">
+                <button class="r32-dossier__card" type="button" data-story="nismo" role="tab" aria-selected="false">
                   <span>05</span>
                   <strong>Nismo</strong>
                   <small>Nismo & N1 Editions</small>
@@ -297,7 +303,7 @@
           </section>
           <!-- History Timeline -->
           <section class="r32-modern-timeline r32-reveal">
-            <h3> Timeline</h3>
+            <h3>Timeline</h3>
             <div class="r32-modern-timeline__rail">
               <article><span>1989</span>
                 <p>R32 Skyline GT-R launches with RB26DETT, ATTESA E-TS, and Super HICAS.</p>
@@ -392,7 +398,7 @@
             <dd>Sub-8 min</dd>
           </div>
         </dl>
-        <button class="r33-drawer-trigger" id="r33-drawer-open" aria-controls="r33-drawer">
+        <button class="r33-drawer-trigger" id="r33-drawer-open" aria-controls="r33-drawer" aria-expanded="false">
           <span>Explore R33 History</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -405,19 +411,23 @@
         <iframe title="1997 Nissan Skyline GT-R R33 by DisneyCars on Sketchfab"
           src="https://sketchfab.com/models/d80ea5ec62ed433483fc62f55d14e410/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
           allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
+        <div class="model-card__loading" aria-hidden="true">
+          <div class="model-card__spinner"></div>
+          <span>Loading 3D Model</span>
+        </div>
         <a href="https://sketchfab.com/3d-models/1997-nissan-skyline-gt-r-r33-d80ea5ec62ed433483fc62f55d14e410"
           target="_blank" rel="noreferrer">Sketchfab model by DisneyCars</a>
       </div>
     </section>
 
     <!-- R33 The Underrated GT-R — Slide-in Drawer -->
-    <aside class="r33-drawer" id="r33-drawer" aria-label="R33 history and achievements" aria-hidden="true">
+    <aside class="r33-drawer" id="r33-drawer" role="dialog" aria-modal="true" aria-label="R33 history and achievements" aria-hidden="true">
       <div class="r33-drawer__backdrop" id="r33-drawer-backdrop"></div>
       <div class="r33-drawer__panel">
         <header class="r33-drawer__header">
           <div>
             <p class="eyebrow">Skyline GT-R BCNR33</p>
-            <h2 class="r33-drawer__title"> The Underrated GT-R.</h2>
+            <h2 class="r33-drawer__title">The Underrated GT-R.</h2>
           </div>
           <button class="r33-drawer__close" id="r33-drawer-close" aria-label="Close R33 history panel">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -645,6 +655,10 @@
         <iframe title="Nissan Skyline R34 GT-R by Lexyc16 on Sketchfab"
           src="https://sketchfab.com/models/ff8fb2251dfa4bb9979e7022c5a6666c/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
           allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
+        <div class="model-card__loading" aria-hidden="true">
+          <div class="model-card__spinner"></div>
+          <span>Loading 3D Model</span>
+        </div>
         <a href="https://sketchfab.com/3d-models/nissan-skyline-r34-gt-r-ff8fb2251dfa4bb9979e7022c5a6666c"
           target="_blank" rel="noreferrer">Sketchfab model by Lexyc16</a>
       </div>
@@ -673,7 +687,7 @@
             <dd>1,560 kg</dd>
           </div>
         </dl>
-        <button class="r34-drawer-trigger" id="r34-drawer-open" aria-controls="r34-drawer">
+        <button class="r34-drawer-trigger" id="r34-drawer-open" aria-controls="r34-drawer" aria-expanded="false">
           <span>Explore R34 History</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -685,13 +699,13 @@
     </section>
 
     <!-- R34 The Icon — Slide-in Drawer -->
-    <aside class="r34-drawer" id="r34-drawer" aria-label="R34 history and achievements" aria-hidden="true">
+    <aside class="r34-drawer" id="r34-drawer" role="dialog" aria-modal="true" aria-label="R34 history and achievements" aria-hidden="true">
       <div class="r34-drawer__backdrop" id="r34-drawer-backdrop"></div>
       <div class="r34-drawer__panel">
         <header class="r34-drawer__header">
           <div>
             <p class="eyebrow">Skyline GT-R BNR34</p>
-            <h2 class="r34-drawer__title"> The Icon.</h2>
+            <h2 class="r34-drawer__title">The Icon.</h2>
           </div>
           <button class="r34-drawer__close" id="r34-drawer-close" aria-label="Close R34 history panel">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -926,6 +940,10 @@
         <iframe title="Nissan GTR R35 by Ciasny on Sketchfab"
           src="https://sketchfab.com/models/51c912a8310c4e00a82ad7673d84228a/embed?autostart=0&ui_theme=dark&ui_infos=0&dnt=1"
           allow="autoplay; fullscreen; xr-spatial-tracking" allowfullscreen loading="lazy"></iframe>
+        <div class="model-card__loading" aria-hidden="true">
+          <div class="model-card__spinner"></div>
+          <span>Loading 3D Model</span>
+        </div>
         <a href="https://sketchfab.com/3d-models/nissan-gtr-r35-51c912a8310c4e00a82ad7673d84228a" target="_blank"
           rel="noreferrer">Sketchfab model by Ciasny</a>
       </div>
@@ -966,7 +984,7 @@
     </section>
 
     <!-- R35 The Supercar Killer — Slide-in Drawer -->
-    <aside class="r35-drawer gen-drawer" id="r35-drawer" aria-label="R35 Supercar Killer history and achievements" aria-hidden="true">
+    <aside class="r35-drawer gen-drawer" id="r35-drawer" role="dialog" aria-modal="true" aria-label="R35 Supercar Killer history and achievements" aria-hidden="true">
       <div class="r35-drawer__backdrop gen-drawer__backdrop" id="r35-drawer-backdrop"></div>
       <div class="r35-drawer__panel gen-drawer__panel">
         <header class="r35-drawer__header gen-drawer__header">
@@ -1205,32 +1223,33 @@
         <div class="section-label">
           <span>Timeline</span>
         </div>
+        <h2 class="section-label__title">Evolutionary Lineage</h2>
         <div class="timeline__list">
-          <article class="timeline__item reveal">
+          <a href="#r32" class="timeline__item reveal" aria-label="Explore R32 generation">
             <span>1989</span>
             <h3>Skyline GT-R R32</h3>
             <p>RB26DETT, 276 hp, touring-car domination.</p>
-          </article>
-          <article class="timeline__item reveal">
+          </a>
+          <a href="#r33" class="timeline__item reveal" aria-label="Explore R33 generation">
             <span>1995</span>
             <h3>Skyline GT-R R33</h3>
             <p>Longer wheelbase, faster high-speed composure.</p>
-          </article>
-          <article class="timeline__item reveal">
+          </a>
+          <a href="#r34" class="timeline__item reveal" aria-label="Explore R34 generation">
             <span>1999</span>
             <h3>Skyline GT-R R34</h3>
             <p>Culture-defining shape, MFD, ATTESA E-TS Pro.</p>
-          </article>
-          <article class="timeline__item reveal">
+          </a>
+          <a href="#r35" class="timeline__item reveal" aria-label="Explore R35 generation">
             <span>2007</span>
             <h3>Nissan GT-R R35</h3>
             <p>VR38DETT and dual-clutch launch-control violence.</p>
-          </article>
-          <article class="timeline__item reveal">
+          </a>
+          <a href="#finale" class="timeline__item reveal" aria-label="Explore R35 farewell and finale">
             <span>2025</span>
             <h3>R35 Farewell</h3>
-            <p>The end of a 17-year supercar-slaying production run.</p>
-          </article>
+            <p>The end of an 18-year supercar-slaying production run.</p>
+          </a>
         </div>
       </div>
       <div class="split-screen__image">
@@ -1277,12 +1296,12 @@
           <div class="blocker blocker-right"></div>
           <div class="blocker blocker-bottom"></div>
           <div class="finale__interactive-zone">
-            <span>Hover here for 3D controls</span>
+            <span>Interact for 3D controls</span>
           </div>
         </div>
         <div class="finale__motion-copy">
           <p class="eyebrow">Forever boosted</p>
-          <h4>Eternal Skyline.</h4>
+          <h2 class="finale__heading">Eternal Skyline.</h2>
           <p>
             The R34 GT-R is the poster car that never aged out: RB26, ATTESA, screen legend, street myth.
           </p>

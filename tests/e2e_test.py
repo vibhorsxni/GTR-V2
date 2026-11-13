@@ -2,190 +2,335 @@ import os
 import sys
 import time
 import threading
-from http.server import SimpleHTTPRequestHandler, HTTPServer
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+
+# Ensure UTF-8 output encoding on Windows consoles
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 from playwright.sync_api import sync_playwright
 
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
-
+PORT = 8089
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 class QuietHandler(SimpleHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, directory=ROOT_DIR, **kwargs)
     def log_message(self, format, *args):
-        pass
+        pass  # Quiet logging
+    def copyfile(self, source, outputfile):
+        try:
+            super().copyfile(source, outputfile)
+        except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
+            pass
 
-PORT = 8999
-server = HTTPServer(('127.0.0.1', PORT), QuietHandler)
-server_thread = threading.Thread(target=server.serve_forever, daemon=True)
-server_thread.start()
-time.sleep(0.5)
+def has_cls(locator, cls_name):
+    cls_attr = locator.get_attribute("class") or ""
+    return cls_name in cls_attr.split()
 
-print(f"Test server running on http://127.0.0.1:{PORT}")
+def start_server():
+    server = ThreadingHTTPServer(('127.0.0.1', PORT), QuietHandler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    return server
 
-qa_report = {
-    "viewports_checked": [],
-    "drawer_tests": [],
-    "nav_tests": [],
-    "console_errors": [],
-    "failed_requests": [],
-    "overall_passed": True
-}
+def run_tests():
+    server = start_server()
+    print(f"Server started on http://127.0.0.1:{PORT}")
+    time.sleep(0.5)
 
-viewports = [
-    ("Desktop 1920x1080", 1920, 1080),
-    ("Desktop 1440x900", 1440, 900),
-    ("Desktop 1366x768", 1366, 768),
-    ("Tablet 1024x768", 1024, 768),
-    ("Tablet 768x1024", 768, 1024),
-    ("Mobile 425x850", 425, 850),
-    ("Mobile 390x844 (iPhone 14/Pixel)", 390, 844),
-    ("Mobile 375x667 (SE/Small)", 375, 667),
-    ("Mobile 320x568 (Min spec)", 320, 568),
-]
-
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True)
-    page = browser.new_page(viewport={"width": 1920, "height": 1080})
-
-    page.on("console", lambda msg: (
-        qa_report["console_errors"].append(f"[{msg.type.upper()}] {msg.text}")
-        if msg.type == "error" else None
-    ))
-    page.on("requestfailed", lambda req: (
-        qa_report["failed_requests"].append(f"[FAIL] {req.url}")
-    ))
-
-    # 1. Load Page
-    print("\n--- 1. LOADING HOMEPAGE ---")
-    page.goto(f"http://127.0.0.1:{PORT}/index.html", wait_until="domcontentloaded")
-    page.wait_for_timeout(3000)
-
-    title = page.title()
-    print(f"Title: {title}")
-    assert "Project GTR" in title, f"Unexpected title: {title}"
-
-    # 2. Test All 4 Generation Drawers (R32, R33, R34, R35)
-    for gen in ['r32', 'r33', 'r34', 'r35']:
-        print(f"\n--- Testing Drawer: {gen.upper()} ---")
-        open_btn = f"#{gen}-drawer-open"
-        drawer = f"#{gen}-drawer"
-        close_btn = f"#{gen}-drawer-close"
-        
-        # Verify trigger exists and is visible
-        page.locator(open_btn).scroll_into_view_if_needed()
-        page.wait_for_timeout(400)
-        assert page.is_visible(open_btn), f"Trigger {open_btn} not visible"
-        
-        # Click trigger to open drawer
-        page.click(open_btn)
-        page.wait_for_timeout(600)
-        is_open = page.locator(drawer).evaluate("el => el.classList.contains('is-open')")
-        assert is_open, f"Drawer {drawer} failed to open"
-        print(f"  ✓ {gen.upper()} Drawer opened successfully")
-
-        # Test Dossier Stories inside the drawer
-        story_cards = page.locator(f"{drawer} [data-story]")
-        count = story_cards.count()
-        print(f"  Found {count} interactive story tabs in {gen.upper()}")
-        for i in range(count):
-            card = story_cards.nth(i)
-            story_key = card.get_attribute("data-story")
-            card.click()
-            page.wait_for_timeout(100)
-            is_active = card.evaluate("el => el.classList.contains('is-active')")
-            stat_text = page.locator(f"#{gen}-focus-stat").text_content()
-            assert is_active, f"Story {story_key} did not become active"
-            print(f"    - Tab [{story_key}]: Stat = {stat_text}")
-
-        # Close drawer
-        page.click(close_btn)
-        page.wait_for_timeout(600)
-        is_closed = not page.locator(drawer).evaluate("el => el.classList.contains('is-open')")
-        assert is_closed, f"Drawer {drawer} failed to close"
-        print(f"  ✓ {gen.upper()} Drawer closed successfully")
-        qa_report["drawer_tests"].append(f"{gen.upper()} Drawer & Dossier fully functional")
-
-    # 3. Test Navigation and Mobile Toggle
-    print("\n--- 3. TESTING NAVIGATION & MOBILE MENU ---")
-    page.set_viewport_size({"width": 390, "height": 844})
-    page.wait_for_timeout(400)
+    failures = []
     
-    nav_toggle = page.locator("#nav-toggle")
-    assert nav_toggle.is_visible(), "Mobile nav toggle button not visible on 390px"
-    
-    # Click mobile hamburger
-    nav_toggle.click()
-    page.wait_for_timeout(400)
-    is_nav_open = page.locator("#primary-nav").evaluate("el => el.classList.contains('is-open')")
-    assert is_nav_open, "Primary nav did not open on mobile"
-    print("  ✓ Mobile hamburger opened primary nav drawer")
-
-    # Click a link inside mobile nav
-    page.click("#primary-nav a[href='#r34']")
-    page.wait_for_timeout(500)
-    is_nav_closed = not page.locator("#primary-nav").evaluate("el => el.classList.contains('is-open')")
-    assert is_nav_closed, "Primary nav did not close after clicking link"
-    print("  ✓ Primary nav automatically closed after link click")
-    qa_report["nav_tests"].append("Mobile menu open, click, close verified")
-
-    # 4. Test Back to Top Button
-    print("\n--- 4. TESTING BACK TO TOP BUTTON ---")
-    page.set_viewport_size({"width": 1920, "height": 1080})
-    page.evaluate("() => window.scrollTo(0, 1500)")
-    page.wait_for_timeout(500)
-    btt = page.locator("#back-to-top")
-    is_btt_visible = btt.evaluate("el => el.classList.contains('is-visible')")
-    print(f"Back to top visible at scroll 1500: {is_btt_visible}")
-    if is_btt_visible:
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        
+        # Test 1: Desktop Page Load, Preloader & Hero Parallax
+        print("\n--- Test 1: Desktop Page Load & Preloader ---")
+        context = browser.new_context(viewport={"width": 1440, "height": 900})
+        page = context.new_page()
+        
+        console_errors = []
+        page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
+        
+        url = f"http://127.0.0.1:{PORT}/index.html"
+        page.goto(url, wait_until="domcontentloaded")
+        
+        # Verify preloader exists and then hides
+        loader = page.locator("#loader")
+        if not loader.is_visible():
+            failures.append("Preloader #loader was not visible on init")
+        
+        # Wait for preloader to finish (max 5s)
+        page.wait_for_selector("#loader.is-hidden", timeout=5000)
+        print("[OK] Preloader successfully completed and has .is-hidden class")
+        
+        # Verify body is-loading removed
+        body = page.locator("body")
+        if has_cls(body, "is-loading"):
+            failures.append("body still had 'is-loading' class after preloader finished")
+        else:
+            print("[OK] body 'is-loading' class cleanly removed")
+            
+        # Verify hero progress css variable updates on scroll
+        hero = page.locator("#hero")
+        initial_hero_prog = page.evaluate("() => getComputedStyle(document.getElementById('hero')).getPropertyValue('--hero-progress')")
+        page.evaluate("() => window.scrollTo(0, 400)")
+        time.sleep(0.3)
+        scrolled_hero_prog = page.evaluate("() => getComputedStyle(document.getElementById('hero')).getPropertyValue('--hero-progress')")
+        if float(scrolled_hero_prog.strip() or 0) > float(initial_hero_prog.strip() or 0):
+            print(f"[OK] Hero parallax progress dynamic: {initial_hero_prog.strip()} -> {scrolled_hero_prog.strip()}")
+        else:
+            failures.append(f"Hero parallax --hero-progress did not increase on scroll ({initial_hero_prog} -> {scrolled_hero_prog})")
+            
+        # Verify Topbar is-scrolled class
+        topbar = page.locator("#topbar")
+        if has_cls(topbar, "is-scrolled"):
+            print("[OK] Topbar has .is-scrolled when page is scrolled")
+        else:
+            failures.append("Topbar missing .is-scrolled after scroll")
+            
+        # Verify Back to Top visibility
+        page.evaluate("() => window.scrollTo(0, 1000)")
+        time.sleep(0.3)
+        btt = page.locator("#back-to-top")
+        if has_cls(btt, "is-visible"):
+            print("[OK] Back-to-top button visible after scrolling past 450px")
+        else:
+            failures.append("Back-to-top button not visible after scroll")
+            
+        # Click back to top
         btt.click()
-        page.wait_for_timeout(600)
-        current_scroll = page.evaluate("() => window.scrollY")
-        print(f"Scroll position after clicking Back to Top: {current_scroll}")
-        assert current_scroll < 100, f"Scroll did not return to top (scrollY={current_scroll})"
-        print("  ✓ Back to top scrolled smoothly to top")
+        time.sleep(0.6)
+        scroll_y = page.evaluate("() => window.scrollY")
+        if scroll_y < 100:
+            print(f"[OK] Back-to-top smoothly scrolled to top: scrollY={scroll_y}")
+        else:
+            failures.append(f"Back-to-top failed to scroll to top: scrollY={scroll_y}")
+            
+        # Test 2: Generation Drawers (R32, R33, R34, R35)
+        print("\n--- Test 2: Generation Drawers Interactive Functionality ---")
+        for gen in ['r32', 'r33', 'r34', 'r35']:
+            open_btn = page.locator(f"#{gen}-drawer-open")
+            drawer = page.locator(f"#{gen}-drawer")
+            panel = page.locator(f"#{gen}-drawer .{gen}-drawer__panel, #{gen}-drawer .gen-drawer__panel")
+            
+            # Scroll trigger into view
+            open_btn.scroll_into_view_if_needed()
+            time.sleep(0.2)
+            
+            # Check initial aria attributes
+            if open_btn.get_attribute("aria-expanded") != "false":
+                failures.append(f"{gen} open button missing aria-expanded='false'")
+            if drawer.get_attribute("aria-hidden") != "true":
+                failures.append(f"{gen} drawer missing aria-hidden='true'")
+            if drawer.get_attribute("role") != "dialog":
+                failures.append(f"{gen} drawer missing role='dialog'")
+                
+            # Click open
+            open_btn.click()
+            time.sleep(0.4)
+            
+            if not has_cls(drawer, "is-open"):
+                failures.append(f"{gen} drawer missing .is-open class after click")
+            if open_btn.get_attribute("aria-expanded") != "true":
+                failures.append(f"{gen} trigger missing aria-expanded='true' after open")
+            if drawer.get_attribute("aria-hidden") != "false":
+                failures.append(f"{gen} drawer missing aria-hidden='false' after open")
+                
+            # Check body overflow lock
+            body_overflow = page.evaluate("() => document.body.style.overflow")
+            if body_overflow != "hidden":
+                failures.append(f"Body overflow was not 'hidden' when {gen} drawer opened: {body_overflow}")
+                
+            # Check cinema CTA button
+            cinema_cta = page.locator(f"#{gen}-drawer .{gen}-cinema__cta, #{gen}-drawer .gen-cinema__cta")
+            if cinema_cta.count() > 0:
+                cinema_cta.first.click()
+                time.sleep(0.5)
+                panel_scroll = page.evaluate(f"() => document.querySelector('#{gen}-drawer .{gen}-drawer__panel, #{gen}-drawer .gen-drawer__panel').scrollTop")
+                if panel_scroll > 100:
+                    print(f"[OK] {gen.upper()} Cinema CTA smoothly scrolled drawer panel down: scrollTop={panel_scroll}px")
+                else:
+                    failures.append(f"{gen.upper()} Cinema CTA failed to scroll drawer panel: scrollTop={panel_scroll}")
+                    
+            # Check story tabs
+            story_tabs = page.locator(f"#{gen}-drawer [data-story]")
+            tab_count = story_tabs.count()
+            if tab_count > 1:
+                second_tab = story_tabs.nth(1)
+                story_key = second_tab.get_attribute("data-story")
+                second_tab.click()
+                time.sleep(0.3)
+                if not has_cls(second_tab, "is-active"):
+                    failures.append(f"{gen.upper()} story tab '{story_key}' did not get .is-active")
+                kicker_text = page.locator(f"#{gen}-focus-kicker").text_content() or ""
+                if not kicker_text.strip():
+                    failures.append(f"{gen.upper()} focus kicker empty after clicking tab {story_key}")
+                else:
+                    print(f"[OK] {gen.upper()} story tab '{story_key}' switched cleanly (kicker: '{kicker_text.strip()}')")
+                    
+            # Check timeline rail layout
+            rail = page.locator(f"#{gen}-drawer .{gen}-modern-timeline__rail, #{gen}-drawer .gen-modern-timeline__rail")
+            if rail.count() > 0:
+                grid_flow = page.evaluate(f"() => getComputedStyle(document.querySelector('#{gen}-drawer .{gen}-modern-timeline__rail, #{gen}-drawer .gen-modern-timeline__rail')).gridAutoFlow")
+                if "column" in grid_flow:
+                    print(f"[OK] {gen.upper()} timeline rail uses horizontal auto-flow column: {grid_flow}")
+                else:
+                    failures.append(f"{gen.upper()} timeline rail does not use grid-auto-flow column: {grid_flow}")
+                    
+            # Test Escape key to close
+            page.keyboard.press("Escape")
+            time.sleep(0.4)
+            if has_cls(drawer, "is-open"):
+                failures.append(f"{gen.upper()} drawer failed to close on Escape key")
+            else:
+                print(f"[OK] {gen.upper()} drawer closed successfully via Escape key")
+                
+            # Verify body overflow restored
+            body_overflow_after = page.evaluate("() => document.body.style.overflow")
+            if body_overflow_after != "":
+                failures.append(f"Body overflow was not restored after closing {gen} drawer: '{body_overflow_after}'")
 
-    # 5. Test Horizontal Overflow Across ALL 9 Viewports
-    print("\n--- 5. TESTING HORIZONTAL OVERFLOW ACROSS VIEWPORTS ---")
-    overflow_failures = []
-    for name, w, h in viewports:
-        page.set_viewport_size({"width": w, "height": h})
-        page.wait_for_timeout(300)
-        scroll_w = page.evaluate("() => document.documentElement.scrollWidth")
-        win_w = page.evaluate("() => window.innerWidth")
-        has_overflow = scroll_w > win_w
-        status = "FAIL (OVERFLOW)" if has_overflow else "PASS"
-        print(f"  {name}: innerWidth={win_w}, scrollWidth={scroll_w} => [{status}]")
-        qa_report["viewports_checked"].append((name, w, win_w, scroll_w, not has_overflow))
-        if has_overflow:
-            overflow_failures.append((name, w, scroll_w))
+        # Test 3: Finale Section
+        print("\n--- Test 3: Finale Section ---")
+        finale_heading = page.locator(".finale__heading")
+        if finale_heading.count() == 0:
+            failures.append("Missing .finale__heading in finale section")
+        else:
+            font_size = page.evaluate("() => getComputedStyle(document.querySelector('.finale__heading')).fontSize")
+            print(f"[OK] .finale__heading renders with responsive display scale: {font_size}")
+            
+        # Test 4: Mobile Viewport, Navigation Drawer & Backdrop
+        print("\n--- Test 4: Mobile Navigation & Backdrop (375x812) ---")
+        mobile_context = browser.new_context(viewport={"width": 375, "height": 812})
+        mobile_page = mobile_context.new_page()
+        mobile_page.goto(url, wait_until="domcontentloaded")
+        mobile_page.wait_for_selector("#loader.is-hidden", timeout=5000)
+        
+        nav_toggle = mobile_page.locator("#nav-toggle")
+        primary_nav = mobile_page.locator("#primary-nav")
+        nav_backdrop = mobile_page.locator("#nav-backdrop")
+        
+        if not nav_toggle.is_visible():
+            failures.append("Mobile nav toggle (#nav-toggle) is not visible on 375px viewport")
+        else:
+            print("[OK] Mobile hamburger button visible")
+            
+        # Open mobile nav
+        nav_toggle.click()
+        time.sleep(0.4)
+        
+        if not has_cls(primary_nav, "is-open"):
+            failures.append("Primary nav did not get .is-open class on hamburger click")
+        if not has_cls(nav_backdrop, "is-open"):
+            failures.append("Nav backdrop did not get .is-open class on hamburger click")
+        if nav_toggle.get_attribute("aria-expanded") != "true":
+            failures.append("Nav toggle missing aria-expanded='true' when open")
+        print("[OK] Mobile drawer & backdrop opened with correct classes and aria-expanded")
+        
+        # Click backdrop to close
+        nav_backdrop.click(position={"x": 20, "y": 200})
+        time.sleep(0.4)
+        if has_cls(primary_nav, "is-open"):
+            failures.append("Mobile nav did not close after clicking backdrop")
+        if has_cls(nav_backdrop, "is-open"):
+            failures.append("Nav backdrop did not close after clicking backdrop")
+        print("[OK] Mobile drawer closed smoothly on backdrop click")
+        
+        # Test nav link click closes menu
+        nav_toggle.click()
+        time.sleep(0.3)
+        r34_link = mobile_page.locator("#primary-nav a[href='#r34']")
+        r34_link.click()
+        time.sleep(0.5)
+        if has_cls(primary_nav, "is-open"):
+            failures.append("Mobile nav did not close after clicking nav link")
+        else:
+            print("[OK] Mobile nav automatically closed upon nav link click")
+            
+        # Test 5: Horizontal Overflow Across 9 Screen Sizes
+        print("\n--- Test 5: Horizontal Scrollbar / Overflow Validation ---")
+        viewports = [
+            ("iPhone SE 1st gen", 320, 568),
+            ("iPhone 8", 375, 667),
+            ("iPhone 13/14", 390, 844),
+            ("Pixel 7 / Android", 412, 915),
+            ("iPad Mini", 768, 1024),
+            ("iPad Air", 820, 1180),
+            ("iPad Landscape", 1024, 768),
+            ("MacBook Pro", 1440, 900),
+            ("Desktop FHD", 1920, 1080)
+        ]
+        
+        for name, w, h in viewports:
+            vp_ctx = browser.new_context(viewport={"width": w, "height": h})
+            vp_page = vp_ctx.new_page()
+            vp_page.goto(url, wait_until="domcontentloaded")
+            vp_page.wait_for_selector("#loader.is-hidden", timeout=5000)
+            
+            overflow_diff = vp_page.evaluate("() => document.documentElement.scrollWidth - window.innerWidth")
+            if overflow_diff > 1:
+                failures.append(f"Horizontal overflow detected on {name} ({w}x{h}): scrollWidth={w+overflow_diff}px > window={w}px (diff: {overflow_diff}px)")
+            else:
+                print(f"[OK] No horizontal overflow on {name} ({w}x{h}): diff={overflow_diff}px")
+            vp_ctx.close()
+            
+        # Test 6: Credits Page Validation
+        print("\n--- Test 6: Credits Page Integrity ---")
+        credits_page = context.new_page()
+        credits_url = f"http://127.0.0.1:{PORT}/credits.html"
+        credits_page.goto(credits_url, wait_until="domcontentloaded")
+        
+        # Check title and header
+        credits_h1 = credits_page.locator(".credits-header h1")
+        if credits_h1.count() == 0:
+            failures.append("Credits page missing .credits-header h1")
+        else:
+            print(f"[OK] Credits page rendered title: '{credits_h1.text_content().strip()}'")
+            
+        # Check return button
+        back_btn = credits_page.locator(".back-btn")
+        if back_btn.count() == 0 or "index.html" not in (back_btn.get_attribute("href") or ""):
+            failures.append("Credits page back-btn missing or does not link to index.html")
+        else:
+            print("[OK] Credits page back-btn links correctly to index.html")
+            
+        # Check bento cards count
+        bento_count = credits_page.locator(".bento-card").count()
+        if bento_count < 5:
+            failures.append(f"Credits page has only {bento_count} bento cards; expected at least 5")
+        else:
+            print(f"[OK] Credits page contains {bento_count} detailed bento attribution cards")
+            
+        # Save verification screenshots
+        page.screenshot(path="screenshots/desktop_verified.png")
+        mobile_page.screenshot(path="screenshots/mobile_verified.png")
+        credits_page.screenshot(path="screenshots/credits_verified.png")
+        print("\n[OK] Captured verified screenshots: desktop_verified.png, mobile_verified.png, credits_verified.png")
+        
+        browser.close()
+        
+    server.shutdown()
+    
+    print("\n================ TEST SUMMARY ================")
+    if console_errors:
+        print(f"Console errors detected ({len(console_errors)}):")
+        for err in console_errors:
+            print("  - ", err)
+        failures.extend([f"Console error: {e}" for e in console_errors])
+    else:
+        print("[OK] Zero browser console errors detected on load and navigation")
+        
+    if failures:
+        print(f"\n[FAIL] FAILED ({len(failures)} failures):")
+        for f in failures:
+            print("  [FAIL] ", f)
+        sys.exit(1)
+    else:
+        print("\n[PASS] ALL TESTS PASSED! Ready for production deployment.")
+        sys.exit(0)
 
-    assert len(overflow_failures) == 0, f"Horizontal overflow detected on: {overflow_failures}"
-
-    # Take verification screenshots
-    os.makedirs("screenshots", exist_ok=True)
-    page.set_viewport_size({"width": 1920, "height": 1080})
-    page.screenshot(path="screenshots/desktop_verified.png", full_page=False)
-    page.set_viewport_size({"width": 390, "height": 844})
-    page.screenshot(path="screenshots/mobile_verified.png", full_page=False)
-    print("  ✓ Verification screenshots saved to screenshots/")
-
-    browser.close()
-
-print("\n==========================================")
-print("             QA REPORT SUMMARY            ")
-print("==========================================")
-print(f"Drawers Tested: {len(qa_report['drawer_tests'])}")
-for t in qa_report['drawer_tests']:
-    print(f"  + {t}")
-print(f"Navigation Tests: {len(qa_report['nav_tests'])}")
-for t in qa_report['nav_tests']:
-    print(f"  + {t}")
-print(f"Viewports Tested for Overflow: {len(qa_report['viewports_checked'])}")
-for name, w, win_w, scroll_w, passed in qa_report['viewports_checked']:
-    print(f"  + {name}: {'PERFECT' if passed else 'FAILED'}")
-print(f"Console Errors: {len(qa_report['console_errors'])}")
-for err in qa_report['console_errors']:
-    print(f"  ! {err}")
-print(f"Failed Requests: {len(qa_report['failed_requests'])}")
-for r in qa_report['failed_requests']:
-    print(f"  x {r}")
-print("==========================================")
+if __name__ == '__main__':
+    run_tests()

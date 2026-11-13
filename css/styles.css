@@ -59,7 +59,7 @@ a {
 .loader {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 9999;
   display: grid;
   place-items: center;
   align-content: center;
@@ -119,18 +119,6 @@ a {
   animation: spin 1.2s linear infinite;
 }
 
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 20px clamp(18px, 4vw, 54px);
-}
 
 .brand,
 .nav {
@@ -173,6 +161,7 @@ main {
 }
 
 .hero {
+  --hero-progress: 0;
   display: grid;
   align-items: start;
 }
@@ -218,6 +207,10 @@ main {
 .hero__copy {
   width: min(900px, 94vw);
   margin-top: -100vh;
+  transform: translateY(calc(var(--hero-progress) * -10vh));
+  opacity: clamp(0, calc(1.05 - (var(--hero-progress) * 2.2)), 1);
+  will-change: transform, opacity;
+  transition: opacity 0.1s linear, transform 0.1s linear;
 }
 
 .hero__scroll-hint {
@@ -246,6 +239,10 @@ main {
   align-items: flex-end;
   text-align: right;
   z-index: 3;
+  transform: translateY(calc((0.4 - var(--hero-progress)) * 14vh));
+  opacity: clamp(0, calc((var(--hero-progress) - 0.22) * 2.8), 1);
+  will-change: transform, opacity;
+  transition: opacity 0.1s linear, transform 0.1s linear;
 }
 
 .hero__quote-text {
@@ -514,6 +511,8 @@ h3 {
 }
 
 .model-card {
+  position: relative;
+  overflow: hidden;
   display: grid;
   background: #050505;
   box-shadow: 0 30px 90px rgba(0, 0, 0, .34);
@@ -784,15 +783,36 @@ dd {
   border-radius: 4px;
 }
 
+.section-label__title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.8vw, 3.8rem);
+  line-height: 0.94;
+  margin: 14px 0 24px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .timeline.split-screen .timeline__item {
-  transition: transform 0.3s ease, background 0.3s ease;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
   padding: 12px;
   border-radius: 8px;
+  border: 1px solid transparent;
 }
 
 .timeline.split-screen .timeline__item:hover {
   transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 0, 51, 0.3);
+}
+
+.timeline.split-screen .timeline__item:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 4px;
 }
 
 /* Credits split-screen adjustments */
@@ -1332,12 +1352,12 @@ dd {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  z-index: 60;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 18px clamp(18px, 4vw, 54px);
+  padding: calc(16px + env(safe-area-inset-top, 0px)) clamp(18px, 4vw, 54px) 16px;
   background: linear-gradient(180deg, rgba(5, 5, 5, 0.88) 0%, rgba(5, 5, 5, 0) 100%);
   transition: background-color 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
 }
@@ -1347,8 +1367,8 @@ dd {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  padding-bottom: 12px;
 }
 
 .nav {
@@ -1433,6 +1453,27 @@ dd {
   transform: translateY(-6px) rotate(-45deg);
 }
 
+/* Mobile Nav Backdrop */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 55;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+}
+
+.nav-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+
 @media (max-width: 768px) {
   .nav-toggle {
     display: flex;
@@ -1451,16 +1492,21 @@ dd {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    padding: 100px 32px 40px;
+    padding: calc(90px + env(safe-area-inset-top, 0px)) 32px calc(40px + env(safe-area-inset-bottom, 0px));
     gap: 20px;
     transform: translateX(100%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 55;
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.35s;
+    z-index: 65;
     box-shadow: -15px 0 45px rgba(0, 0, 0, 0.85);
   }
 
   .nav.is-open {
     transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
 
   .nav a {
@@ -1474,8 +1520,8 @@ dd {
 /* Floating Back to Top Button */
 .back-to-top {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: calc(24px + env(safe-area-inset-right, 0px));
   z-index: 45;
   width: 48px;
   height: 48px;
@@ -1525,12 +1571,14 @@ dd {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   pointer-events: none;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
   z-index: 1;
 }
 
 .model-card__loading.is-loaded {
   opacity: 0;
+  visibility: hidden;
+  transition-delay: 0s;
 }
 
 .model-card__spinner {
@@ -1613,6 +1661,7 @@ dd {
   pointer-events: none;
   visibility: hidden;
   overflow: hidden; /* Prevents off-screen panel from causing page horizontal overflow */
+  transition: visibility 0s linear 0.55s;
 }
 
 .gen-drawer.is-open,
@@ -1622,6 +1671,7 @@ dd {
 .r35-drawer.is-open {
   pointer-events: auto;
   visibility: visible;
+  transition-delay: 0s;
 }
 
 /* Backdrop */
@@ -1976,6 +2026,8 @@ dd {
   justify-content: flex-end;
   padding: clamp(24px, 4vw, 54px);
   overflow: hidden;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  will-change: opacity, transform;
 }
 
 .gen-focus__kicker,
@@ -2212,12 +2264,15 @@ dd {
 .r34-modern-timeline__rail,
 .r35-modern-timeline__rail {
   display: grid;
-  grid-template-columns: repeat(6, minmax(190px, 1fr));
-  gap: 1px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 280px);
+  gap: 12px;
   overflow-x: auto;
   max-width: 100%;
-  padding-bottom: 12px;
+  padding-bottom: 16px;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--red) rgba(255, 255, 255, 0.08);
 }
 
 .gen-modern-timeline__rail article,
@@ -2226,9 +2281,14 @@ dd {
 .r34-modern-timeline__rail article,
 .r35-modern-timeline__rail article {
   min-height: 210px;
-  padding: 18px;
-  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 3px solid var(--red);
   background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .gen-modern-timeline__rail span,
